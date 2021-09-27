@@ -22,11 +22,11 @@
         <hutool.version>5.4.4</hutool.version>
     </properties>
     <modules>
-        <module>treasure-api-comment</module>
-        <module>treasure-web-comment</module>
-        <module>treasure-comment</module>
-        <module>treasure-server-comment</module>
-        <module>treasure-domain-comment</module>
+        <module>treasure-api</module>
+        <module>treasure-web</module>
+        <module>treasure-common</module>
+        <module>treasure-server</module>
+        <module>treasure-domain</module>
     </modules>
     <dependencies>
         <dependency>
@@ -40,17 +40,22 @@
         <dependencies>
             <dependency>
                 <groupId>com.github.howwrite</groupId>
-                <artifactId>treasure-api-comment</artifactId>
+                <artifactId>treasure-api</artifactId>
                 <version>${treasure-bag.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.howwrite</groupId>
-                <artifactId>treasure-web-comment</artifactId>
+                <artifactId>treasure-web</artifactId>
                 <version>${treasure-bag.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.howwrite</groupId>
-                <artifactId>treasure-comment</artifactId>
+                <artifactId>treasure-common</artifactId>
+                <version>${treasure-bag.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.howwrite</groupId>
+                <artifactId>treasure-domain</artifactId>
                 <version>${treasure-bag.version}</version>
             </dependency>
             <dependency>
