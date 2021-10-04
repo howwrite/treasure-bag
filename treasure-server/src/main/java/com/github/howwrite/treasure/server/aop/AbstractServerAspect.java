@@ -5,7 +5,7 @@ import com.github.howwrite.treasure.api.constant.CommonErrorMap;
 import com.github.howwrite.treasure.api.constant.OperationType;
 import com.github.howwrite.treasure.api.request.AbstractRequest;
 import com.github.howwrite.treasure.api.response.Response;
-import com.github.howwrite.treasure.server.exception.ServerException;
+import com.github.howwrite.treasure.server.exception.ServerBizException;
 import com.github.howwrite.treasure.util.SplitterUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -66,10 +66,10 @@ public abstract class AbstractServerAspect {
                 log.info(generateSuccessLog(watch, joinPoint, request, response));
             }
             return response;
-        } catch (ServerException e) {
+        } catch (ServerBizException e) {
             log.warn(referenceLog(joinPoint, request, watch), e);
-            final String message = messageSource.getMessage(e.getErrorCode(), e.getArgs(), e.getMessage(), Locale.getDefault());
-            return Response.fail(message, e.getErrorCode(), e.getArgs());
+            final String message = messageSource.getMessage(e.getMessage(), e.getArgs(), e.getDefaultMessage(), Locale.getDefault());
+            return Response.fail(message, e.getMessage(), e.getArgs());
         } catch (IllegalArgumentException e) {
             log.warn(referenceLog(joinPoint, request, watch), e);
             final String errorCode = e.getMessage();

@@ -1,37 +1,29 @@
 package com.github.howwrite.treasure.server.exception;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
 /**
+ * 服务异常，不会透出具体的异常信息
+ *
  * @author howwrite
- * @date 2020/10/7 9:47 下午
+ * @date 2021/10/4 10:32 下午
  */
-@EqualsAndHashCode(callSuper = true)
-@Data
 public class ServerException extends RuntimeException {
-    private static final long serialVersionUID = 1861119396443594724L;
-
-    private String errorCode;
-    private Object[] args;
-
-    public ServerException(String error, String errorCode, Object... args) {
-        super(error);
-        setErrorCode(errorCode);
-        setArgs(args);
+    public ServerException() {
+        super();
     }
 
-    public ServerException(String errorCode, Object... args) {
-        setErrorCode(errorCode);
-        setArgs(args);
+    public ServerException(String message) {
+        super(message);
     }
 
-    public ServerException(String errorCode, Throwable cause) {
+    public ServerException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public ServerException(Throwable cause) {
         super(cause);
-        setErrorCode(errorCode);
     }
 
-    public ServerException(String errorCode) {
-        setErrorCode(errorCode);
+    protected ServerException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
     }
 }
