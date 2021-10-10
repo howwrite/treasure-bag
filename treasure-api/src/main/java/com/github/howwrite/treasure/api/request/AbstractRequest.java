@@ -25,6 +25,6 @@ public abstract class AbstractRequest implements Serializable {
     public abstract OperationType callOperationType();
 
     public void checkParam() {
-        ParameterUtils.notNull(callOperationType(), CommonErrorMap.OPERATION_TYPE_CAN_NOT_BE_NULL);
+        ParameterUtils.notNull(CommonErrorMap.OPERATION_TYPE_CAN_NOT_BE_NULL, callOperationType());
     }
 }
