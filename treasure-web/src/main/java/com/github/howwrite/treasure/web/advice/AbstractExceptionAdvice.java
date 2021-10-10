@@ -27,7 +27,7 @@ public abstract class AbstractExceptionAdvice {
     @ExceptionHandler(WebRestException.class)
     protected ResponseEntity<Object> onWebRestException(WebRestException e, HttpServletRequest request) {
         log.warn("request warn!" + RequestUtils.generateRequestErrorLog(request, "\n"), e);
-        final String errorCode = e.getErrorCode();
+        final String errorCode = e.getErrorMessage();
         final Object[] args = e.getArgs();
         String error = messageSource.getMessage(errorCode, args, e.getMessage(), request.getLocale());
         HttpStatus httpStatus = HttpStatus.OK;
