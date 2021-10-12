@@ -1,4 +1,4 @@
-package com.github.howwrite.treasure.domain;
+package com.github.howwrite.treasure.infrastructure;
 
 import lombok.Data;
 
