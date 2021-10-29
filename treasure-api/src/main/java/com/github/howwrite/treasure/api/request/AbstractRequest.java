@@ -1,6 +1,5 @@
 package com.github.howwrite.treasure.api.request;
 
-import com.github.howwrite.treasure.api.constant.CommonErrorMap;
 import com.github.howwrite.treasure.api.constant.OperationType;
 import com.github.howwrite.treasure.util.ParameterUtils;
 import io.swagger.annotations.ApiModelProperty;
@@ -25,6 +24,6 @@ public abstract class AbstractRequest implements Serializable {
     public abstract OperationType callOperationType();
 
     public void checkParam() {
-        ParameterUtils.notNull(CommonErrorMap.OPERATION_TYPE_CAN_NOT_BE_NULL, callOperationType());
+        ParameterUtils.notNull("操作状态不可以为空", callOperationType());
     }
 }

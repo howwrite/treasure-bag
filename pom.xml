@@ -27,6 +27,7 @@
         <module>treasure-common</module>
         <module>treasure-server</module>
         <module>treasure-domain</module>
+        <module>properties-helper</module>
     </modules>
     <dependencies>
         <dependency>

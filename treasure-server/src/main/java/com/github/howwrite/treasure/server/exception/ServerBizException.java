@@ -13,24 +13,13 @@ import lombok.EqualsAndHashCode;
 @Data
 public class ServerBizException extends ServerException {
     private static final long serialVersionUID = 1861119396443594724L;
-
-    /**
-     * 默认提示文案
-     */
-    private String   defaultMessage;
     /**
      * 提示文案参数
      */
     private Object[] args;
 
-    public ServerBizException(String errorCode, String message, Object... args) {
-        super(errorCode);
-        setDefaultMessage(message);
-        setArgs(args);
-    }
-
-    public ServerBizException(String errorCode, Object... args) {
-        super(errorCode);
+    public ServerBizException(String message, Object... args) {
+        super(message);
         setArgs(args);
     }
 }

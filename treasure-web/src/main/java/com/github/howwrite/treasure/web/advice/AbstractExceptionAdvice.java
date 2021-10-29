@@ -1,6 +1,5 @@
 package com.github.howwrite.treasure.web.advice;
 
-import com.github.howwrite.treasure.api.constant.CommonErrorMap;
 import com.github.howwrite.treasure.web.exception.WebRestException;
 import com.github.howwrite.treasure.web.util.RequestUtils;
 import com.google.common.collect.ImmutableMap;
@@ -33,7 +32,7 @@ public abstract class AbstractExceptionAdvice {
         HttpStatus httpStatus = HttpStatus.OK;
         if (StringUtils.isEmpty(error)) {
             log.warn("error code can not find i18n resource, errorCode:{}", errorCode);
-            error = messageSource.getMessage(CommonErrorMap.SYSTEM_ERROR, null, request.getLocale());
+            error = messageSource.getMessage("系统开小差啦", null, request.getLocale());
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
         }
         final HashMap<Object, Object> values = new HashMap<>(8);
@@ -47,7 +46,7 @@ public abstract class AbstractExceptionAdvice {
     @ExceptionHandler(Throwable.class)
     protected ResponseEntity<Object> onException(Throwable e, HttpServletRequest request) {
         log.warn("request error!" + RequestUtils.generateRequestErrorLog(request, "\n"), e);
-        String error = messageSource.getMessage(CommonErrorMap.SYSTEM_ERROR, null, request.getLocale());
+        String error = messageSource.getMessage("系统开小差啦", null, request.getLocale());
         final ImmutableMap<String, Object> values = ImmutableMap.of("success", false, "error", error);
         return new ResponseEntity<>(values, HttpStatus.INTERNAL_SERVER_ERROR);
     }

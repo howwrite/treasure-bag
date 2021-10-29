@@ -1,7 +1,6 @@
 package com.github.howwrite.treasure.server.aop;
 
 import com.alibaba.fastjson.JSONObject;
-import com.github.howwrite.treasure.api.constant.CommonErrorMap;
 import com.github.howwrite.treasure.api.constant.OperationType;
 import com.github.howwrite.treasure.api.request.AbstractRequest;
 import com.github.howwrite.treasure.api.response.Response;
@@ -68,7 +67,7 @@ public abstract class AbstractServerAspect {
             return response;
         } catch (ServerBizException e) {
             log.warn(referenceLog(joinPoint, request, watch), e);
-            final String message = messageSource.getMessage(e.getMessage(), e.getArgs(), e.getDefaultMessage(), Locale.getDefault());
+            final String message = messageSource.getMessage(e.getMessage(), e.getArgs(), e.getMessage(), Locale.getDefault());
             return Response.fail(message, e.getMessage(), e.getArgs());
         } catch (IllegalArgumentException e) {
             log.warn(referenceLog(joinPoint, request, watch), e);
@@ -77,8 +76,8 @@ public abstract class AbstractServerAspect {
             return Response.fail(message, errorCode);
         } catch (Throwable e) {
             log.error(referenceLog(joinPoint, request, watch), e);
-            final String message = messageSource.getMessage(CommonErrorMap.SYSTEM_ERROR, null, Locale.getDefault());
-            return Response.fail(message, CommonErrorMap.SYSTEM_ERROR);
+            final String message = messageSource.getMessage("系统开小差啦", null, Locale.getDefault());
+            return Response.fail(message, "系统开小差啦");
         }
     }
 
