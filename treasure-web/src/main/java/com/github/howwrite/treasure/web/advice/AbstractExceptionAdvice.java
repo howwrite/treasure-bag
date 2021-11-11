@@ -26,19 +26,18 @@ public abstract class AbstractExceptionAdvice {
     @ExceptionHandler(WebRestException.class)
     protected ResponseEntity<Object> onWebRestException(WebRestException e, HttpServletRequest request) {
         log.warn("request warn!" + RequestUtils.generateRequestErrorLog(request, "\n"), e);
-        final String errorCode = e.getErrorMessage();
+        final String errorMessage = e.getMessage();
         final Object[] args = e.getArgs();
-        String error = messageSource.getMessage(errorCode, args, e.getMessage(), request.getLocale());
+        String error = messageSource.getMessage(errorMessage, args, errorMessage, request.getLocale());
         HttpStatus httpStatus = HttpStatus.OK;
         if (StringUtils.isEmpty(error)) {
-            log.warn("error code can not find i18n resource, errorCode:{}", errorCode);
+            log.warn("error code can not find i18n resource, errorMessage:{}", errorMessage);
             error = messageSource.getMessage("系统开小差啦", null, request.getLocale());
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
         }
         final HashMap<Object, Object> values = new HashMap<>(8);
         values.put("success", false);
         values.put("error", error);
-        values.put("errorCode", errorCode);
         values.put("args", args);
         return new ResponseEntity<>(values, httpStatus);
     }

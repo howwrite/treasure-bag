@@ -71,12 +71,12 @@ public abstract class AbstractServerAspect {
             return Response.fail(message, e.getMessage(), e.getArgs());
         } catch (IllegalArgumentException e) {
             log.warn(referenceLog(joinPoint, request, watch), e);
-            final String errorCode = e.getMessage();
-            final String message = messageSource.getMessage(errorCode, null, Locale.getDefault());
-            return Response.fail(message, errorCode);
+            final String errorMessage = e.getMessage();
+            final String message = messageSource.getMessage(errorMessage, null,errorMessage, Locale.getDefault());
+            return Response.fail(message, errorMessage);
         } catch (Throwable e) {
             log.error(referenceLog(joinPoint, request, watch), e);
-            final String message = messageSource.getMessage("系统开小差啦", null, Locale.getDefault());
+            final String message = messageSource.getMessage("系统开小差啦", null,"系统开小差啦", Locale.getDefault());
             return Response.fail(message, "系统开小差啦");
         }
     }

@@ -13,7 +13,6 @@ public final class Response<T> implements Serializable {
     private static final long serialVersionUID = 7937244760344738860L;
     private T data;
     private boolean success;
-    private String errorCode;
     private String error;
     private Object[] args;
 
@@ -29,13 +28,6 @@ public final class Response<T> implements Serializable {
         response.setArgs(args);
         return response;
     }
-
-    public static <T> Response<T> fail(String error, String errorCode) {
-        final Response<T> response = fail(error);
-        response.setErrorCode(errorCode);
-        return response;
-    }
-
     public static <T> Response<T> fail(String error) {
         final Response<T> response = new Response<>();
         response.setSuccess(false);

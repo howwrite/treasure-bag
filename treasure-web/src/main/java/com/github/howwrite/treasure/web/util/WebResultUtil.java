@@ -12,6 +12,6 @@ public class WebResultUtil {
         if (result.isSuccess()) {
             return result.getData();
         }
-        throw new WebRestException(result.getErrorCode(), result.getError(), result.getArgs());
+        throw new WebRestException( result.getError(), result.getArgs());
     }
 }
