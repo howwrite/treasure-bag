@@ -1,7 +1,6 @@
 package com.github.howwrite.treasure.server.aop;
 
 import com.alibaba.fastjson.JSONObject;
-import com.github.howwrite.treasure.api.constant.OperationType;
 import com.github.howwrite.treasure.api.request.AbstractRequest;
 import com.github.howwrite.treasure.api.response.Response;
 import com.github.howwrite.treasure.server.exception.ServerBizException;
@@ -107,22 +106,20 @@ public abstract class AbstractServerAspect {
         StringBuilder sb = new StringBuilder();
         Signature pointSignature = point.getSignature();
         sb.append(handlerMethodSign(pointSignature.toString()));
-        sb.append(joiner()).append("operatorType: ").append(handlerOperatorType(request.callOperationType()));
+        sb.append(joiner()).append("operatorType: ").append(handlerOperatorType(request.callIntroduction()));
         sb.append(joiner()).append("request: ").append(objectToJsonString(request));
         sb.append(joiner()).append("costTimeMills:").append(stopwatch.getTotalTimeMillis()).append("ms");
         return sb.toString();
     }
 
     /**
-     * 处理操作类型
+     * 处理简介信息
      *
-     * @param type 处理操作类型
-     * @return 操作类型中的信息
+     * @param introduction 处理操作简介
+     * @return 简介信息
      */
-    protected String handlerOperatorType(OperationType type) {
-        StringBuilder sb = new StringBuilder("isWrite:").append(type.isWrite());
-        sb.append("  Introduction:").append(type.getIntroduction());
-        return sb.toString();
+    protected String handlerOperatorType(String introduction) {
+        return " Introduction:" + introduction;
     }
 
     /**
