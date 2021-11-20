@@ -106,7 +106,7 @@ public abstract class AbstractServerAspect {
         StringBuilder sb = new StringBuilder();
         Signature pointSignature = point.getSignature();
         sb.append(handlerMethodSign(pointSignature.toString()));
-        sb.append(joiner()).append("operatorType: ").append(handlerOperatorType(request.callIntroduction()));
+        sb.append(joiner()).append(handlerOperatorType(request.callIntroduction()));
         sb.append(joiner()).append("request: ").append(objectToJsonString(request));
         sb.append(joiner()).append("costTimeMills:").append(stopwatch.getTotalTimeMillis()).append("ms");
         return sb.toString();
@@ -119,7 +119,7 @@ public abstract class AbstractServerAspect {
      * @return 简介信息
      */
     protected String handlerOperatorType(String introduction) {
-        return " Introduction:" + introduction;
+        return "Introduction:" + introduction;
     }
 
     /**

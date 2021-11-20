@@ -27,6 +27,6 @@ public abstract class AbstractResponseBodyAdvice implements ResponseBodyAdvice<O
             }
 
         }
-        return ImmutableMap.of("success", true, "result", body);
+        return ImmutableMap.of("success", true, "data", body);
     }
 }

@@ -38,7 +38,6 @@ public abstract class AbstractExceptionAdvice {
         final HashMap<Object, Object> values = new HashMap<>(8);
         values.put("success", false);
         values.put("error", error);
-        values.put("args", args);
         return new ResponseEntity<>(values, httpStatus);
     }
 
