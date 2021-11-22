@@ -1,4 +1,4 @@
-package com.github.howwrite.treasure.server.exception;
+package com.github.howwrite.treasure.common.exception;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

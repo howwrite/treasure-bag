@@ -23,6 +23,8 @@ import java.util.HashMap;
 public abstract class AbstractExceptionAdvice {
     private final MessageSource messageSource;
 
+    public static final String DEFAULT_ERROR_MESSAGE = "系统开小差啦";
+
     @ExceptionHandler(WebRestException.class)
     protected ResponseEntity<Object> onWebRestException(WebRestException e, HttpServletRequest request) {
         log.warn("request warn!" + RequestUtils.generateRequestErrorLog(request, "\n"), e);
@@ -32,7 +34,7 @@ public abstract class AbstractExceptionAdvice {
         HttpStatus httpStatus = HttpStatus.OK;
         if (StringUtils.isEmpty(error)) {
             log.warn("error code can not find i18n resource, errorMessage:{}", errorMessage);
-            error = messageSource.getMessage("系统开小差啦", null, request.getLocale());
+            error = messageSource.getMessage(DEFAULT_ERROR_MESSAGE, null, DEFAULT_ERROR_MESSAGE, request.getLocale());
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
         }
         final HashMap<Object, Object> values = new HashMap<>(8);
@@ -44,7 +46,8 @@ public abstract class AbstractExceptionAdvice {
     @ExceptionHandler(Throwable.class)
     protected ResponseEntity<Object> onException(Throwable e, HttpServletRequest request) {
         log.warn("request error!" + RequestUtils.generateRequestErrorLog(request, "\n"), e);
-        String error = messageSource.getMessage("系统开小差啦", null, request.getLocale());
+        String errorMessage = messageSource.getMessage(DEFAULT_ERROR_MESSAGE, null, DEFAULT_ERROR_MESSAGE, request.getLocale());
+        String error = errorMessage == null ? DEFAULT_ERROR_MESSAGE : errorMessage;
         final ImmutableMap<String, Object> values = ImmutableMap.of("success", false, "error", error);
         return new ResponseEntity<>(values, HttpStatus.INTERNAL_SERVER_ERROR);
     }

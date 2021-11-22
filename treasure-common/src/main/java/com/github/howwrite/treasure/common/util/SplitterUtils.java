@@ -1,4 +1,4 @@
-package com.github.howwrite.treasure.util;
+package com.github.howwrite.treasure.common.util;
 
 import com.google.common.base.Splitter;
 

@@ -11,5 +11,11 @@
 
     <artifactId>treasure-domain</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.github.howwrite</groupId>
+            <artifactId>treasure-common</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

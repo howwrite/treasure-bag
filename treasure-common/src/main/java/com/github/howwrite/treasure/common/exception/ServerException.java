@@ -1,4 +1,4 @@
-package com.github.howwrite.treasure.server.exception;
+package com.github.howwrite.treasure.common.exception;
 
 /**
  * 服务异常，不会透出具体的异常信息

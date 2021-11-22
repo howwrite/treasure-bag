@@ -1,6 +1,6 @@
 package com.github.howwrite.treasure.api.request;
 
-import com.github.howwrite.treasure.util.ParameterUtils;
+import com.github.howwrite.treasure.common.util.ParameterUtils;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.NotNull;

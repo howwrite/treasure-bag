@@ -22,16 +22,11 @@ public final class Response<T> implements Serializable {
         response.setSuccess(true);
         return response;
     }
-
-    public static <T> Response<T> fail(String error, String errorCode, Object... args) {
-        final Response<T> response = fail(error, errorCode);
-        response.setArgs(args);
-        return response;
-    }
-    public static <T> Response<T> fail(String error) {
+    public static <T> Response<T> fail(String error, Object... args) {
         final Response<T> response = new Response<>();
         response.setSuccess(false);
         response.setError(error);
+        response.setArgs(args);
         return response;
     }
 }
