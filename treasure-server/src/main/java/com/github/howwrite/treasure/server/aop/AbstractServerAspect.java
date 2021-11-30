@@ -13,6 +13,7 @@ import org.aspectj.lang.annotation.Around;
 import org.springframework.context.MessageSource;
 import org.springframework.util.StopWatch;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
@@ -53,30 +54,47 @@ public abstract class AbstractServerAspect {
     protected Response<?> doApi(ProceedingJoinPoint joinPoint) {
         StopWatch watch = new StopWatch();
         watch.start();
-        final Object arg = joinPoint.getArgs()[0];
-        // 单参原则：只能有一个参数，并且继承自AbstractRequest
-        final AbstractRequest request = (AbstractRequest) arg;
+        Object[] args = joinPoint.getArgs();
+        if (args != null) {
+            for (Object arg : args) {
+                checkParam(arg);
+            }
+        }
         try {
-            request.checkParam();
             Response<?> response = (Response<?>) joinPoint.proceed();
             watch.stop();
             if (printSuccessLogAble()) {
-                log.info(generateSuccessLog(watch, joinPoint, request, response));
+                log.info(generateSuccessLog(watch, joinPoint, args, response));
             }
             return response;
         } catch (ServerBizException e) {
-            log.warn(referenceLog(joinPoint, request, watch), e);
+            log.warn(referenceLog(joinPoint, args, watch), e);
             final String message = messageSource.getMessage(e.getMessage(), e.getArgs(), e.getMessage(), Locale.getDefault());
             return Response.fail(message, e.getMessage(), e.getArgs());
         } catch (IllegalArgumentException e) {
-            log.warn(referenceLog(joinPoint, request, watch), e);
+            log.warn(referenceLog(joinPoint, args, watch), e);
             final String errorMessage = e.getMessage();
             final String message = messageSource.getMessage(errorMessage, null,errorMessage, Locale.getDefault());
             return Response.fail(message, errorMessage);
         } catch (Throwable e) {
-            log.error(referenceLog(joinPoint, request, watch), e);
+            log.error(referenceLog(joinPoint, args, watch), e);
             final String message = messageSource.getMessage("系统开小差啦", null,"系统开小差啦", Locale.getDefault());
             return Response.fail(message, "系统开小差啦");
+        }
+    }
+
+    private void checkParam(Object arg) {
+        if (arg instanceof AbstractRequest) {
+            AbstractRequest request = (AbstractRequest) arg;
+            request.checkParam();
+        }
+        if (arg instanceof Iterable) {
+            Iterable<?> iterable = (Iterable<?>) arg;
+            iterable.forEach(this::checkParam);
+        }
+        if (arg instanceof Collection) {
+            Collection<?> collection = (Collection<?>) arg;
+            collection.forEach(this::checkParam);
         }
     }
 
@@ -88,7 +106,7 @@ public abstract class AbstractServerAspect {
      * @param point    切面信息
      * @param response 方法返回值
      */
-    protected String generateSuccessLog(StopWatch watch, ProceedingJoinPoint point, AbstractRequest request, Response<?> response) {
+    protected String generateSuccessLog(StopWatch watch, ProceedingJoinPoint point, Object request, Response<?> response) {
         return referenceLog(point, request, watch) + handlerReturnObj(response);
     }
 
@@ -99,27 +117,16 @@ public abstract class AbstractServerAspect {
      * @param stopwatch 计时器
      * @return 切面信息字符串
      */
-    protected String referenceLog(ProceedingJoinPoint point, AbstractRequest request, StopWatch stopwatch) {
+    protected String referenceLog(ProceedingJoinPoint point, Object request, StopWatch stopwatch) {
         if (stopwatch.isRunning()) {
             stopwatch.stop();
         }
         StringBuilder sb = new StringBuilder();
         Signature pointSignature = point.getSignature();
         sb.append(handlerMethodSign(pointSignature.toString()));
-        sb.append(joiner()).append(handlerOperatorType(request.callIntroduction()));
         sb.append(joiner()).append("request: ").append(objectToJsonString(request));
         sb.append(joiner()).append("costTimeMills:").append(stopwatch.getTotalTimeMillis()).append("ms");
         return sb.toString();
-    }
-
-    /**
-     * 处理简介信息
-     *
-     * @param introduction 处理操作简介
-     * @return 简介信息
-     */
-    protected String handlerOperatorType(String introduction) {
-        return "Introduction:" + introduction;
     }
 
     /**
