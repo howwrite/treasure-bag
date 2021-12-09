@@ -3,7 +3,6 @@ package com.github.howwrite.treasure.domain;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * @author howwrite
@@ -25,16 +24,16 @@ public abstract class AbstractDO<ID> implements Serializable {
     /**
      * 删除时间
      */
-    private LocalDateTime deletedTime;
+    private Long deletedTime;
 
     /**
      * 记录创建时间
      */
-    private LocalDateTime createdTime;
+    private Long createdTime;
 
     /**
      * 记录更新时间
      */
-    private LocalDateTime updatedTime;
+    private Long updatedTime;
 
 }
