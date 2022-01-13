@@ -9,7 +9,7 @@ import com.github.howwrite.treasure.web.exception.WebRestException;
  */
 public class WebResultUtil {
     public static <T> T resultOrThrow(Response<T> result) {
-        if (result.isSuccess()) {
+        if (result.isOk()) {
             return result.getData();
         }
         throw new WebRestException( result.getError(), result.getArgs());

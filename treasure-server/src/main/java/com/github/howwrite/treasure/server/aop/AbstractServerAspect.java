@@ -55,12 +55,12 @@ public abstract class AbstractServerAspect {
         StopWatch watch = new StopWatch();
         watch.start();
         Object[] args = joinPoint.getArgs();
-        if (args != null) {
-            for (Object arg : args) {
-                checkParam(arg);
-            }
-        }
         try {
+            if (args != null) {
+                for (Object arg : args) {
+                    checkParam(arg);
+                }
+            }
             Response<?> response = (Response<?>) joinPoint.proceed();
             watch.stop();
             if (printSuccessLogAble()) {
@@ -74,11 +74,11 @@ public abstract class AbstractServerAspect {
         } catch (IllegalArgumentException e) {
             log.warn(referenceLog(joinPoint, args, watch), e);
             final String errorMessage = e.getMessage();
-            final String message = messageSource.getMessage(errorMessage, null,errorMessage, Locale.getDefault());
+            final String message = messageSource.getMessage(errorMessage, null, errorMessage, Locale.getDefault());
             return Response.fail(message, errorMessage);
         } catch (Throwable e) {
             log.error(referenceLog(joinPoint, args, watch), e);
-            final String message = messageSource.getMessage("系统开小差啦", null,"系统开小差啦", Locale.getDefault());
+            final String message = messageSource.getMessage("系统开小差啦", null, "系统开小差啦", Locale.getDefault());
             return Response.fail(message, "系统开小差啦");
         }
     }

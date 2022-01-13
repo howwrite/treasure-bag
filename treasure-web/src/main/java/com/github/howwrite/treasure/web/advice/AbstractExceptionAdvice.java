@@ -38,7 +38,7 @@ public abstract class AbstractExceptionAdvice {
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
         }
         final HashMap<Object, Object> values = new HashMap<>(8);
-        values.put("success", false);
+        values.put("ok", false);
         values.put("errorMessage", error);
         return new ResponseEntity<>(values, httpStatus);
     }
@@ -48,7 +48,7 @@ public abstract class AbstractExceptionAdvice {
         log.warn("request error!" + RequestUtils.generateRequestErrorLog(request, "\n"), e);
         String errorMessage = messageSource.getMessage(DEFAULT_ERROR_MESSAGE, null, DEFAULT_ERROR_MESSAGE, request.getLocale());
         String error = errorMessage == null ? DEFAULT_ERROR_MESSAGE : errorMessage;
-        final ImmutableMap<String, Object> values = ImmutableMap.of("success", false, "errorMessage", error);
+        final ImmutableMap<String, Object> values = ImmutableMap.of("ok", false, "errorMessage", error);
         return new ResponseEntity<>(values, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

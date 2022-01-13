@@ -21,14 +21,14 @@ public abstract class AbstractResponseBodyAdvice implements ResponseBodyAdvice<O
     public Object beforeBodyWrite(Object body, @Nullable MethodParameter returnType, @Nullable MediaType selectedContentType, @Nullable Class<? extends HttpMessageConverter<?>> selectedConverterType, @Nullable ServerHttpRequest request, @Nullable ServerHttpResponse response) {
         if (body instanceof Map) {
             Map<?, ?> map = (Map<?, ?>) body;
-            Object success = map.get("success");
+            Object success = map.get("ok");
             if (success instanceof Boolean && Boolean.FALSE.equals(success)) {
                 return body;
             }
 
         }
         Map<String, Object> result = new HashMap<>();
-        result.put("success", true);
+        result.put("ok", true);
         result.put("data", body);
         return result;
     }

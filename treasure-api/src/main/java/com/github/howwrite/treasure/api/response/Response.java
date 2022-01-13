@@ -12,19 +12,19 @@ import java.io.Serializable;
 public final class Response<T> implements Serializable {
     private static final long serialVersionUID = 7937244760344738860L;
     private T data;
-    private boolean success;
+    private boolean ok;
     private String error;
     private Object[] args;
 
     public static <T> Response<T> ok(T data) {
         final Response<T> response = new Response<>();
         response.setData(data);
-        response.setSuccess(true);
+        response.setOk(true);
         return response;
     }
     public static <T> Response<T> fail(String error, Object... args) {
         final Response<T> response = new Response<>();
-        response.setSuccess(false);
+        response.setOk(false);
         response.setError(error);
         response.setArgs(args);
         return response;
