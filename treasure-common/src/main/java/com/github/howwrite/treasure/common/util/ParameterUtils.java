@@ -10,27 +10,27 @@ import java.util.Objects;
  * @date 2020/10/7 9:44 下午
  */
 public class ParameterUtils {
-    public static ParameterCheckFactor notNull(String message, Object obj) {
-        return new ParameterCheckFactor().notNull(message, obj);
+    public static CheckBox notNull(String message, Object obj) {
+        return new CheckBox().notNull(message, obj);
     }
 
-    public static ParameterCheckFactor notEmpty(String message, Collection<?> collection) {
-        return new ParameterCheckFactor().notEmpty(message, collection);
+    public static CheckBox notEmpty(String message, Collection<?> collection) {
+        return new CheckBox().notEmpty(message, collection);
     }
 
-    public static ParameterCheckFactor notBlank(String message, CharSequence str) {
-        return new ParameterCheckFactor().anyNotNull(message, str);
+    public static CheckBox notBlank(String message, CharSequence str) {
+        return new CheckBox().anyNotNull(message, str);
     }
 
-    public static ParameterCheckFactor anyNotEmpty(String message, CharSequence... charSequences) {
-        return new ParameterCheckFactor().anyNotEmpty(message, charSequences);
+    public static CheckBox anyNotEmpty(String message, CharSequence... charSequences) {
+        return new CheckBox().anyNotEmpty(message, charSequences);
     }
 
-    public static ParameterCheckFactor anyNotNull(String message, Object... objs) {
-        return new ParameterCheckFactor().anyNotNull(message, objs);
+    public static CheckBox anyNotNull(String message, Object... objs) {
+        return new CheckBox().anyNotNull(message, objs);
     }
-    private static class ParameterCheckFactor{
-        public ParameterCheckFactor anyNotNull(String message, Object... objs) {
+    public static class CheckBox {
+        public CheckBox anyNotNull(String message, Object... objs) {
             if (objs == null || objs.length == 0) {
                 throw new IllegalArgumentException(message);
             }
@@ -41,7 +41,7 @@ public class ParameterUtils {
             }
             throw new IllegalArgumentException(message);
         }
-        public ParameterCheckFactor anyNotEmpty(String message, CharSequence... charSequences) {
+        public CheckBox anyNotEmpty(String message, CharSequence... charSequences) {
             if (charSequences == null || charSequences.length == 0) {
                 throw new IllegalArgumentException(message);
             }
@@ -52,14 +52,14 @@ public class ParameterUtils {
             }
             throw new IllegalArgumentException(message);
         }
-        public ParameterCheckFactor notNull(String message, Object obj) {
+        public CheckBox notNull(String message, Object obj) {
             if (Objects.isNull(obj)) {
                 throw new IllegalArgumentException(message);
             }
             return this;
         }
 
-        public ParameterCheckFactor notEmpty(String message, Collection<?> collection) {
+        public CheckBox notEmpty(String message, Collection<?> collection) {
             notNull(message, collection);
             if (collection.isEmpty()) {
                 throw new IllegalArgumentException(message);
@@ -67,7 +67,7 @@ public class ParameterUtils {
             return this;
         }
 
-        public ParameterCheckFactor notBlank(String message, CharSequence str) {
+        public CheckBox notBlank(String message, CharSequence str) {
             if (StrUtil.isBlank(str)) {
                 throw new IllegalArgumentException(message);
             }
