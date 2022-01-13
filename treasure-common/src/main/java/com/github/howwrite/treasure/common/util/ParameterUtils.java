@@ -10,24 +10,24 @@ import java.util.Objects;
  * @date 2020/10/7 9:44 下午
  */
 public class ParameterUtils {
-    public static void notNull(String message, Object obj) {
-        new ParameterCheckFactor().notNull(message, obj);
+    public static ParameterCheckFactor notNull(String message, Object obj) {
+        return new ParameterCheckFactor().notNull(message, obj);
     }
 
-    public static void notEmpty(String message, Collection<?> collection) {
-        new ParameterCheckFactor().notEmpty(message, collection);
+    public static ParameterCheckFactor notEmpty(String message, Collection<?> collection) {
+        return new ParameterCheckFactor().notEmpty(message, collection);
     }
 
-    public static void notBlank(String message, CharSequence str) {
-        new ParameterCheckFactor().anyNotNull(message, str);
+    public static ParameterCheckFactor notBlank(String message, CharSequence str) {
+        return new ParameterCheckFactor().anyNotNull(message, str);
     }
 
-    public static void anyNotEmpty(String message, CharSequence... charSequences) {
-        new ParameterCheckFactor().anyNotEmpty(message, charSequences);
+    public static ParameterCheckFactor anyNotEmpty(String message, CharSequence... charSequences) {
+        return new ParameterCheckFactor().anyNotEmpty(message, charSequences);
     }
 
-    public static void anyNotNull(String message, Object... objs) {
-        new ParameterCheckFactor().anyNotNull(message, objs);
+    public static ParameterCheckFactor anyNotNull(String message, Object... objs) {
+        return new ParameterCheckFactor().anyNotNull(message, objs);
     }
     private static class ParameterCheckFactor{
         public ParameterCheckFactor anyNotNull(String message, Object... objs) {
