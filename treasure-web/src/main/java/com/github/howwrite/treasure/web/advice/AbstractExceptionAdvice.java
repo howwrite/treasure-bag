@@ -1,6 +1,7 @@
 package com.github.howwrite.treasure.web.advice;
 
-import com.github.howwrite.treasure.web.exception.WebRestException;
+import com.github.howwrite.treasure.api.response.Response;
+import com.github.howwrite.treasure.common.exception.ServerBizException;
 import com.github.howwrite.treasure.web.util.RequestUtils;
 import com.google.common.collect.ImmutableMap;
 import lombok.RequiredArgsConstructor;
@@ -25,30 +26,26 @@ public abstract class AbstractExceptionAdvice {
 
     public static final String DEFAULT_ERROR_MESSAGE = "系统开小差啦";
 
-    @ExceptionHandler(WebRestException.class)
-    protected ResponseEntity<Object> onWebRestException(WebRestException e, HttpServletRequest request) {
+    @ExceptionHandler(ServerBizException.class)
+    protected ResponseEntity<Response<?>> onWebRestException(ServerBizException e, HttpServletRequest request) {
         log.warn("request warn!" + RequestUtils.generateRequestErrorLog(request, "\n"), e);
         final String errorMessage = e.getMessage();
         final Object[] args = e.getArgs();
         String error = messageSource.getMessage(errorMessage, args, errorMessage, request.getLocale());
         HttpStatus httpStatus = HttpStatus.OK;
-        if (StringUtils.isEmpty(error)) {
+        if (StringUtils.hasText(error)) {
             log.warn("error code can not find i18n resource, errorMessage:{}", errorMessage);
             error = messageSource.getMessage(DEFAULT_ERROR_MESSAGE, null, DEFAULT_ERROR_MESSAGE, request.getLocale());
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
         }
-        final HashMap<Object, Object> values = new HashMap<>(8);
-        values.put("ok", false);
-        values.put("errorMessage", error);
-        return new ResponseEntity<>(values, httpStatus);
+        return new ResponseEntity<>(Response.fail(error), httpStatus);
     }
 
     @ExceptionHandler(Throwable.class)
-    protected ResponseEntity<Object> onException(Throwable e, HttpServletRequest request) {
+    protected ResponseEntity<Response<?>> onException(Throwable e, HttpServletRequest request) {
         log.warn("request error!" + RequestUtils.generateRequestErrorLog(request, "\n"), e);
         String errorMessage = messageSource.getMessage(DEFAULT_ERROR_MESSAGE, null, DEFAULT_ERROR_MESSAGE, request.getLocale());
         String error = errorMessage == null ? DEFAULT_ERROR_MESSAGE : errorMessage;
-        final ImmutableMap<String, Object> values = ImmutableMap.of("ok", false, "errorMessage", error);
-        return new ResponseEntity<>(values, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(Response.fail(error), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
