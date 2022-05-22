@@ -1,8 +1,10 @@
 package com.github.howwrite.treasure.api.response;
 
+import com.github.howwrite.treasure.common.exception.ServerException;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.function.Function;
 
 /**
  * @author howwrite
@@ -28,5 +30,15 @@ public final class Response<T> implements Serializable {
         response.setError(error);
         response.setArgs(args);
         return response;
+    }
+
+    public static <T, R> Response<R> convert(Response<T> resp, Function<T, R> apply) {
+        if (apply == null) {
+            throw new NullPointerException("convert function is null");
+        }
+        if (!resp.isOk()) {
+            return Response.fail(resp.getError(), resp.getArgs());
+        }
+        return Response.ok(apply.apply(resp.getData()));
     }
 }
