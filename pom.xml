@@ -28,6 +28,7 @@
         <module>treasure-server</module>
         <module>treasure-domain</module>
         <module>properties-helper</module>
+        <module>treasure-infrastructure</module>
     </modules>
     <dependencies>
         <dependency>
@@ -62,6 +63,11 @@
             <dependency>
                 <groupId>com.github.howwrite</groupId>
                 <artifactId>treasure-domain</artifactId>
+                <version>${treasure-bag.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.howwrite</groupId>
+                <artifactId>treasure-infrastructure</artifactId>
                 <version>${treasure-bag.version}</version>
             </dependency>
             <dependency>
