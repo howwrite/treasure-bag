@@ -25,7 +25,7 @@
     </properties>
     <modules>
         <module>treasure-api</module>
-        <module>treasure-web</module>
+        <module>treasure-adapter</module>
         <module>treasure-common</module>
         <module>treasure-server</module>
         <module>treasure-domain</module>
@@ -54,7 +54,7 @@
             </dependency>
             <dependency>
                 <groupId>com.github.howwrite</groupId>
-                <artifactId>treasure-web</artifactId>
+                <artifactId>treasure-adapter</artifactId>
                 <version>${treasure-bag.version}</version>
             </dependency>
             <dependency>

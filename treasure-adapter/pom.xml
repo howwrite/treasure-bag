@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>treasure-web</artifactId>
+    <artifactId>treasure-adapter</artifactId>
     <dependencies>
         <dependency>
             <groupId>com.github.howwrite</groupId>
@@ -23,6 +23,10 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
         </dependency>
     </dependencies>
 </project>

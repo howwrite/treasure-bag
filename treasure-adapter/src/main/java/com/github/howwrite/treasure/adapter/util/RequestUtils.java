@@ -1,4 +1,4 @@
-package com.github.howwrite.treasure.web.util;
+package com.github.howwrite.treasure.adapter.util;
 
 import com.alibaba.fastjson.JSONObject;
 

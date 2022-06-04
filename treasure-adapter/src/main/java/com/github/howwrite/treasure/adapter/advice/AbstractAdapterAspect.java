@@ -1,4 +1,4 @@
-package com.github.howwrite.treasure.server.aop;
+package com.github.howwrite.treasure.adapter.advice;
 
 import com.alibaba.fastjson.JSONObject;
 import com.github.howwrite.treasure.api.request.AbstractRequest;
@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
+import org.slf4j.Logger;
 import org.springframework.context.MessageSource;
 import org.springframework.util.StopWatch;
 
@@ -23,7 +24,7 @@ import java.util.Locale;
  */
 @Slf4j
 @RequiredArgsConstructor
-public abstract class AbstractServerAspect {
+public abstract class AbstractAdapterAspect {
     private final MessageSource messageSource;
 
     /**
@@ -41,6 +42,14 @@ public abstract class AbstractServerAspect {
         return true;
     }
 
+    protected Locale getLocale() {
+        return Locale.getDefault();
+    }
+
+    protected Logger getLogger() {
+        return log;
+    }
+
     /**
      * 不同信息之间的连接符
      *
@@ -51,7 +60,7 @@ public abstract class AbstractServerAspect {
     }
 
     @Around(value = "apiPointcut()")
-    protected Response<?> doApi(ProceedingJoinPoint joinPoint) {
+    protected Object doApi(ProceedingJoinPoint joinPoint) {
         StopWatch watch = new StopWatch();
         watch.start();
         Object[] args = joinPoint.getArgs();
@@ -61,39 +70,36 @@ public abstract class AbstractServerAspect {
                     checkParam(arg);
                 }
             }
-            Response<?> response = (Response<?>) joinPoint.proceed();
+            Object response = joinPoint.proceed();
             watch.stop();
             if (printSuccessLogAble()) {
-                log.info(generateSuccessLog(watch, joinPoint, args, response));
+                getLogger().info(generateSuccessLog(watch, joinPoint, args, response));
             }
             return response;
         } catch (ServerBizException e) {
-            log.warn(referenceLog(joinPoint, args, watch), e);
-            final String message = messageSource.getMessage(e.getMessage(), e.getArgs(), e.getMessage(), Locale.getDefault());
+            getLogger().warn(referenceLog(joinPoint, args, watch), e);
+            final String message = messageSource.getMessage(e.getMessage(), e.getArgs(), e.getMessage(), getLocale());
             return Response.fail(message, e.getMessage(), e.getArgs());
         } catch (IllegalArgumentException e) {
-            log.warn(referenceLog(joinPoint, args, watch), e);
+            getLogger().warn(referenceLog(joinPoint, args, watch), e);
             final String errorMessage = e.getMessage();
-            final String message = messageSource.getMessage(errorMessage, null, errorMessage, Locale.getDefault());
+            final String message = messageSource.getMessage(errorMessage, null, errorMessage, getLocale());
             return Response.fail(message, errorMessage);
         } catch (Throwable e) {
-            log.error(referenceLog(joinPoint, args, watch), e);
-            final String message = messageSource.getMessage("系统开小差啦", null, "系统开小差啦", Locale.getDefault());
+            getLogger().error(referenceLog(joinPoint, args, watch), e);
+            final String message = messageSource.getMessage("系统开小差啦", null, "系统开小差啦", getLocale());
             return Response.fail(message, "系统开小差啦");
         }
     }
 
     private void checkParam(Object arg) {
-        if (arg instanceof AbstractRequest) {
-            AbstractRequest request = (AbstractRequest) arg;
+        if (arg instanceof AbstractRequest request) {
             request.checkParam();
         }
-        if (arg instanceof Iterable) {
-            Iterable<?> iterable = (Iterable<?>) arg;
+        if (arg instanceof Iterable<?> iterable) {
             iterable.forEach(this::checkParam);
         }
-        if (arg instanceof Collection) {
-            Collection<?> collection = (Collection<?>) arg;
+        if (arg instanceof Collection<?> collection) {
             collection.forEach(this::checkParam);
         }
     }
@@ -106,7 +112,7 @@ public abstract class AbstractServerAspect {
      * @param point    切面信息
      * @param response 方法返回值
      */
-    protected String generateSuccessLog(StopWatch watch, ProceedingJoinPoint point, Object request, Response<?> response) {
+    protected String generateSuccessLog(StopWatch watch, ProceedingJoinPoint point, Object request, Object response) {
         return referenceLog(point, request, watch) + handlerReturnObj(response);
     }
 
@@ -139,26 +145,20 @@ public abstract class AbstractServerAspect {
         try {
             return JSONObject.toJSONString(o);
         } catch (Throwable e) {
-            log.warn("object parse to json error, object:{}", o);
+            getLogger().warn("object parse to json error, object:{}", o);
             return o.toString();
         }
     }
 
     /**
      * 处理返回值
+     * data @param response 返回值
      *
-     * @param response 返回值
      * @return 处理后的字符串
      */
-    protected String handlerReturnObj(Response<?> response) {
-        StringBuilder result = new StringBuilder(joiner()).append("response: ");
-        final Object data = response.getData();
-        if (data == null) {
-            result.append("null");
-        } else {
-            result.append(objectToJsonString(data));
-        }
-        return result.toString();
+    protected String handlerReturnObj(Object data) {
+        return joiner() + "response: " +
+                objectToJsonString(data);
     }
 
     /**
