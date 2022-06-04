@@ -2,7 +2,10 @@ package com.github.howwrite.treasure.web.util;
 
 import com.alibaba.fastjson.JSONObject;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Objects;
 
 /**
  * @author howwrite
@@ -22,7 +25,15 @@ public class RequestUtils {
         return sb.toString();
     }
 
-    public static String toJsonString(Object o) {
+    private static String toJsonString(Object o) {
         return JSONObject.toJSONString(o);
+    }
+
+    public static void writeCookie(HttpServletResponse response, String cookieName, String cookieValue, Integer liveToSeconds) {
+        Cookie cookie = new Cookie(cookieName, cookieValue);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(Objects.requireNonNullElse(liveToSeconds, -1));
+        response.addCookie(cookie);
     }
 }

@@ -1,8 +1,8 @@
 package com.github.howwrite.treasure.api.response;
 
-import com.github.howwrite.treasure.common.exception.ServerException;
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.function.Function;
 
@@ -12,6 +12,7 @@ import java.util.function.Function;
  */
 @Data
 public final class Response<T> implements Serializable {
+    @Serial
     private static final long serialVersionUID = 7937244760344738860L;
     private T data;
     private boolean ok;
