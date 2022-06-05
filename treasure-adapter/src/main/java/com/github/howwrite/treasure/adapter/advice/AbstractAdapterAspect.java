@@ -112,7 +112,7 @@ public abstract class AbstractAdapterAspect {
      * @param point    切面信息
      * @param response 方法返回值
      */
-    protected String generateSuccessLog(StopWatch watch, ProceedingJoinPoint point, Object request, Object response) {
+    protected String generateSuccessLog(StopWatch watch, ProceedingJoinPoint point, Object[] request, Object response) {
         return referenceLog(point, request, watch) + handlerReturnObj(response);
     }
 
@@ -123,7 +123,7 @@ public abstract class AbstractAdapterAspect {
      * @param stopwatch 计时器
      * @return 切面信息字符串
      */
-    protected String referenceLog(ProceedingJoinPoint point, Object request, StopWatch stopwatch) {
+    protected String referenceLog(ProceedingJoinPoint point, Object[] request, StopWatch stopwatch) {
         if (stopwatch.isRunning()) {
             stopwatch.stop();
         }
@@ -138,16 +138,26 @@ public abstract class AbstractAdapterAspect {
     /**
      * 将对象转换成json字符串
      *
-     * @param o 对象
+     * @param objects 参数列表
      * @return json字符串
      */
-    protected String objectToJsonString(Object o) {
-        try {
-            return JSONObject.toJSONString(o);
-        } catch (Throwable e) {
-            getLogger().warn("object parse to json error, object:{}", o);
-            return o.toString();
+    protected String objectToJsonString(Object... objects) {
+        if (objects == null) {
+            return "null";
         }
+        if (objects.length == 0) {
+            return "[]";
+        }
+        StringBuilder result = new StringBuilder();
+        for (Object o : objects) {
+            try {
+                result.append(JSONObject.toJSONString(o)).append('|');
+            } catch (Throwable e) {
+                getLogger().warn("object parse to json error, object:{}", o);
+                result.append(o.toString()).append('|');
+            }
+        }
+        return result.toString();
     }
 
     /**
