@@ -29,6 +29,11 @@ public class ParameterUtils {
     public static CheckBox anyNotNull(String message, Object... objs) {
         return new CheckBox().anyNotNull(message, objs);
     }
+
+    public static CheckBox assertTrue(String message, Boolean value) {
+        return new CheckBox().assertTrue(message, value);
+    }
+
     public static class CheckBox {
         public CheckBox anyNotNull(String message, Object... objs) {
             if (objs == null || objs.length == 0) {
@@ -69,6 +74,13 @@ public class ParameterUtils {
 
         public CheckBox notBlank(String message, CharSequence str) {
             if (StrUtil.isBlank(str)) {
+                throw new IllegalArgumentException(message);
+            }
+            return this;
+        }
+
+        public CheckBox assertTrue(String message, Boolean value) {
+            if (value == null || !value) {
                 throw new IllegalArgumentException(message);
             }
             return this;
