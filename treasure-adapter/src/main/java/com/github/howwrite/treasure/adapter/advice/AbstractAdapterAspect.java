@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.howwrite.treasure.api.request.AbstractRequest;
 import com.github.howwrite.treasure.api.response.Response;
 import com.github.howwrite.treasure.common.exception.ServerBizException;
-import com.github.howwrite.treasure.common.util.SplitterUtils;
+import com.github.howwrite.treasure.tools.utils.SplitterUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;

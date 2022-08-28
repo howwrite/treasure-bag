@@ -1,9 +1,10 @@
-package com.github.howwrite.treasure.common.util;
+package com.github.howwrite.treasure.tools.utils;
 
 import cn.hutool.core.date.SystemClock;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -25,13 +26,14 @@ import java.util.Date;
  * <p>
  * 并且可以通过生成的id反推出生成时间,datacenterId和workerId
  * <p>
- * 参考：http://www.cnblogs.com/relucent/p/4955340.html<br>
- * 关于长度是18还是19的问题见：https://blog.csdn.net/unifirst/article/details/80408050
+ * 参考：<a href="http://www.cnblogs.com/relucent/p/4955340.html">...</a><br>
+ * 关于长度是18还是19的问题见：<a href="https://blog.csdn.net/unifirst/article/details/80408050">...</a>
  *
  * @author Looly
  * @since 3.0.1
  */
 public class Snowflake implements Serializable {
+    @Serial
     private static final long    serialVersionUID     = 1L;
     private static final long    WORKER_ID_BITS       = 5L;
     // 最大支持机器节点数0~31，一共32个
