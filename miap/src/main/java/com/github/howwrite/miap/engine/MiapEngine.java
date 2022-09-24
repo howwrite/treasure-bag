@@ -50,6 +50,7 @@ public class MiapEngine {
     public <Postscript> Postscript invoke(@Nonnull String classification, MiapReader<Postscript> reader) {
         ParameterUtils.notBlank("书架名称不可为空", classification);
         MiapBookShelf bookShelf = findBookShelf(classification);
+        // todo npe
         bookShelf.invoke(reader);
         return reader.seeTheLast();
     }

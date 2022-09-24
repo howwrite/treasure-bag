@@ -11,8 +11,16 @@ public interface MiapBook<Context extends MiapPreface> {
      * @param context 上下文参数
      * @return 当前方法是否需要执行
      */
-    default boolean canRead(MiapPreface context) {
+    default boolean canRead(Context context) {
         return true;
+    }
+
+    default boolean unsafeCanRead(MiapPreface miapPreface) {
+        return canRead((Context) miapPreface);
+    }
+
+    default void unsafeExecute(MiapPreface miapPreface) {
+        execute((Context) miapPreface);
     }
 
     /**
@@ -20,5 +28,5 @@ public interface MiapBook<Context extends MiapPreface> {
      *
      * @param context 上下文信息
      */
-    void execute(MiapPreface context);
+    void execute(Context context);
 }

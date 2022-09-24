@@ -13,17 +13,17 @@ import java.util.List;
 public class MiapBookShelf {
 
     private final String classification;
-    private final List<Class<? extends MiapBook<?>>> bookList;
+    private final List<Class<? extends MiapBook<?>>> bookTypeList;
 
     /**
      * 实体书列表，实体书列表
      */
     @Setter
-    private List<MiapBook<?>> physicalBooks;
+    private List<MiapBook<? extends MiapPreface>> physicalBooks;
 
-    public MiapBookShelf(@Nonnull String classification, @Nonnull List<Class<? extends MiapBook<?>>> bookList) {
+    public MiapBookShelf(@Nonnull String classification, @Nonnull List<Class<? extends MiapBook<?>>> bookTypeList) {
         this.classification = classification;
-        this.bookList = bookList;
+        this.bookTypeList = bookTypeList;
     }
 
     /**
@@ -36,8 +36,6 @@ public class MiapBookShelf {
         return classification;
     }
 
-    ;
-
     /**
      * 书集合
      *
@@ -45,13 +43,14 @@ public class MiapBookShelf {
      */
     @Nonnull
     public List<Class<? extends MiapBook<?>>> readBookList() {
-        return bookList;
+        return bookTypeList;
     }
 
     public void invoke(MiapPreface context) {
         for (MiapBook<? extends MiapPreface> physicalBook : physicalBooks) {
-            if (physicalBook.canRead(context)) {
-                physicalBook.execute(context);
+            // todo 这里的问题运行时才能发现，要想个办法解决这个问题
+            if (physicalBook.unsafeCanRead(context)) {
+                physicalBook.unsafeExecute(context);
             }
         }
     }
