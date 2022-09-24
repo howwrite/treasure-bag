@@ -15,12 +15,13 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <fastjson.version>2.0.12</fastjson.version>
         <guava.version>31.1-jre</guava.version>
         <swagger-v2.version>1.5.22</swagger-v2.version>
         <hutool.version>5.7.13</hutool.version>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
         <!--单独定义是防止依赖包的treasure-bag.version冲突-->
         <treasure-bag.version>1.0-SNAPSHOT</treasure-bag.version>
     </properties>
@@ -33,6 +34,7 @@
         <module>properties-helper</module>
         <module>treasure-infrastructure</module>
         <module>treasure-tools</module>
+        <module>miap</module>
     </modules>
     <dependencies>
         <dependency>
