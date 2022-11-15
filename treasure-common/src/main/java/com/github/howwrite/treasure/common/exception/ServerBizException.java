@@ -13,7 +13,7 @@ import java.io.Serial;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class ServerBizException extends ServerException {
+public class ServerBizException extends RuntimeException {
     @Serial
     private static final long serialVersionUID = 1861119396443594724L;
     /**
@@ -24,5 +24,14 @@ public class ServerBizException extends ServerException {
     public ServerBizException(String message, Object... args) {
         super(message);
         setArgs(args);
+    }
+
+    public ServerBizException(Throwable throwable, String message, Object... args) {
+        super(message, throwable);
+        setArgs(args);
+    }
+
+    public ServerBizException(Throwable cause) {
+        super(cause);
     }
 }
