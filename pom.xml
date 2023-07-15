@@ -12,7 +12,7 @@
     </parent>
     <groupId>com.github.howwrite</groupId>
     <artifactId>treasure-bag</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>2.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -21,20 +21,14 @@
         <fastjson.version>2.0.12</fastjson.version>
         <guava.version>31.1-jre</guava.version>
         <swagger-v2.version>1.5.22</swagger-v2.version>
-        <hutool.version>5.7.13</hutool.version>
-        <!--单独定义是防止依赖包的treasure-bag.version冲突-->
-        <treasure-bag.version>1.0-SNAPSHOT</treasure-bag.version>
+        <hutool.version>5.8.11</hutool.version>
+        <!--单独定义是防止依赖包的project.version冲突-->
+        <treasure-bag.version>2.0-SNAPSHOT</treasure-bag.version>
+        <jetcache.version>2.7.3</jetcache.version>
     </properties>
     <modules>
-        <module>treasure-api</module>
-        <module>treasure-adapter</module>
-        <module>treasure-common</module>
-        <module>treasure-application</module>
-        <module>treasure-domain</module>
-        <module>properties-helper</module>
-        <module>treasure-infrastructure</module>
-        <module>treasure-tools</module>
-        <module>miap</module>
+        <module>bag-core</module>
+        <module>bag-spring</module>
     </modules>
     <dependencies>
         <dependency>
@@ -47,38 +41,23 @@
             <artifactId>javax.annotation-api</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>com.github.howwrite</groupId>
-                <artifactId>treasure-api</artifactId>
+                <artifactId>bag-core</artifactId>
                 <version>${treasure-bag.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.howwrite</groupId>
-                <artifactId>treasure-adapter</artifactId>
-                <version>${treasure-bag.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.howwrite</groupId>
-                <artifactId>treasure-common</artifactId>
-                <version>${treasure-bag.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.howwrite</groupId>
-                <artifactId>treasure-domain</artifactId>
-                <version>${treasure-bag.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.howwrite</groupId>
-                <artifactId>treasure-infrastructure</artifactId>
-                <version>${treasure-bag.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.howwrite</groupId>
-                <artifactId>treasure-tools</artifactId>
+                <artifactId>bag-spring</artifactId>
                 <version>${treasure-bag.version}</version>
             </dependency>
             <dependency>
@@ -100,6 +79,11 @@
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
                 <version>${hutool.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alicp.jetcache</groupId>
+                <artifactId>jetcache-core</artifactId>
+                <version>${jetcache.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
