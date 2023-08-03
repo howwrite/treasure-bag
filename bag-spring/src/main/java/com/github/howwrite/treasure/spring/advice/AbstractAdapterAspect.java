@@ -78,7 +78,7 @@ public abstract class AbstractAdapterAspect {
             return response;
         } catch (ServerBizException e) {
             getLogger().warn(referenceLog(joinPoint, args, watch), e);
-            final String message = messageSource.getMessage(e.getMessage(), e.getArgs(), e.getMessage(), getLocale());
+            final String message = messageSource.getMessage(e.getErrorKey(), e.getArgs(), e.getMessage(), getLocale());
             return Response.fail(message, e.getMessage(), e.getArgs());
         } catch (IllegalArgumentException e) {
             getLogger().warn(referenceLog(joinPoint, args, watch), e);

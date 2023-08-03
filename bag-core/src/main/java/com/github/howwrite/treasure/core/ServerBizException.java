@@ -17,18 +17,24 @@ public class ServerBizException extends RuntimeException {
     @Serial
     private static final long serialVersionUID = 1861119396443594724L;
     /**
+     * 错误信息key
+     */
+    private String errorKey;
+    /**
      * 提示文案参数
      */
     private Object[] args;
 
-    public ServerBizException(String message, Object... args) {
-        super(message);
-        setArgs(args);
+    public ServerBizException(String errorKey, Object... args) {
+        super(String.format(errorKey, args));
+        this.errorKey = errorKey;
+        this.args = args;
     }
 
-    public ServerBizException(Throwable throwable, String message, Object... args) {
-        super(message, throwable);
-        setArgs(args);
+    public ServerBizException(Throwable throwable, String errorKey, Object... args) {
+        super(String.format(errorKey, args), throwable);
+        this.errorKey = errorKey;
+        this.args = args;
     }
 
     public ServerBizException(Throwable cause) {
