@@ -13,10 +13,10 @@ public class Pagination<T> implements Serializable {
     private Integer pageNo;
     private Integer pageSize;
 
-    public Pagination(List<T> data, Integer total, @Nonnull PageParam pageParam) {
+    public Pagination(List<T> data, Integer total, @Nonnull PageQuery pageQuery) {
         this.data = data;
         this.total = total;
-        this.pageNo = pageParam.getPageNo();
-        this.pageSize = pageParam.getPageSize();
+        this.pageNo = pageQuery.getPageNo();
+        this.pageSize = pageQuery.getPageSize();
     }
 }
