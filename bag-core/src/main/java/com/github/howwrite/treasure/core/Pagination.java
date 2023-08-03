@@ -23,7 +23,7 @@ public class Pagination<T> implements Serializable {
         }
     }
 
-    public static Pagination<?> empty() {
+    public static <T> Pagination<T> empty() {
         return new Pagination<>(new ArrayList<>(), 0, null);
     }
 }
