@@ -1,10 +1,10 @@
 package com.github.howwrite.treasure.jinxiu.spring;
 
-import com.github.howwrite.treasure.jinxiu.domain.executor.SequentialExecutionRoadExecutor;
-import com.github.howwrite.treasure.jinxiu.domain.executor.factory.RoadExecutorFactory;
+import com.github.howwrite.treasure.jinxiu.domain.executor.SequentialExecutionPipelineExecutor;
+import com.github.howwrite.treasure.jinxiu.domain.executor.factory.PipelineExecutorFactory;
 import com.github.howwrite.treasure.jinxiu.domain.node.NodeProvider;
-import com.github.howwrite.treasure.jinxiu.domain.road.DefaultRoadFactory;
-import com.github.howwrite.treasure.jinxiu.domain.road.RoadFactory;
+import com.github.howwrite.treasure.jinxiu.domain.pipeline.DefaultPipelineFactory;
+import com.github.howwrite.treasure.jinxiu.domain.pipeline.PipelineFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -17,8 +17,8 @@ import org.springframework.context.annotation.Configuration;
 public class JinxiuRoadRegister {
     @Bean
     @ConditionalOnMissingBean
-    public RoadFactory roadFactory(NodeProvider nodeProvider) {
-        return new DefaultRoadFactory(nodeProvider);
+    public PipelineFactory pipelineFactory(NodeProvider nodeProvider) {
+        return new DefaultPipelineFactory(nodeProvider);
     }
 
     @Bean
@@ -29,12 +29,12 @@ public class JinxiuRoadRegister {
 
     @Bean
     @ConditionalOnMissingBean
-    public RoadExecutorFactory defaultRoadExecutorFactory(SequentialExecutionRoadExecutor sequentialExecutionRoadExecutor) {
-        return road -> sequentialExecutionRoadExecutor;
+    public PipelineExecutorFactory defaultPipelineExecutorFactory(SequentialExecutionPipelineExecutor sequentialExecutionPipelineExecutor) {
+        return pipeline -> sequentialExecutionPipelineExecutor;
     }
 
     @Bean
-    public SequentialExecutionRoadExecutor sequentialExecutionRoadExecutor() {
-        return new SequentialExecutionRoadExecutor();
+    public SequentialExecutionPipelineExecutor sequentialExecutionPipelineExecutor() {
+        return new SequentialExecutionPipelineExecutor();
     }
 }

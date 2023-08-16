@@ -1,4 +1,4 @@
-package com.github.howwrite.treasure.jinxiu.domain.road;
+package com.github.howwrite.treasure.jinxiu.domain.pipeline;
 
 import com.github.howwrite.treasure.core.ServerBizException;
 import com.github.howwrite.treasure.jinxiu.domain.node.Node;
@@ -10,11 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class DefaultRoadFactory implements RoadFactory {
+public class DefaultPipelineFactory implements PipelineFactory {
     private final NodeProvider nodeProvider;
 
     @Override
-    public Road genRoadByNodeTypes(String name, Class<? extends Node>... nodeTypes) {
+    public Pipeline genPipelineByNodeTypes(String name, Class<? extends Node>... nodeTypes) {
         if (ArrayUtils.isEmpty(nodeTypes)) {
             throw new ServerBizException("nodeTypes is empty");
         }
@@ -22,6 +22,6 @@ public class DefaultRoadFactory implements RoadFactory {
         for (Class<? extends Node> nodeType : nodeTypes) {
             nodeList.add(nodeProvider.findNodeByType(nodeType));
         }
-        return new Road(name, nodeList);
+        return new Pipeline(name, nodeList);
     }
 }
