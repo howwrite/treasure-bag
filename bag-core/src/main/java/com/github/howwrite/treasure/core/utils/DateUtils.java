@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class DateUtil {
+public class DateUtils {
 
     private static final Map<String, DateTimeFormatter> FORMATTER_MAP = new ConcurrentHashMap<>();
 
