@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.2</version>
+        <version>3.2.4</version>
         <relativePath/>
     </parent>
     <groupId>com.github.howwrite</groupId>
@@ -15,13 +15,13 @@
     <version>2.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <fastjson.version>2.0.12</fastjson.version>
-        <guava.version>31.1-jre</guava.version>
+        <guava.version>33.0.0-jre</guava.version>
         <swagger-v2.version>1.5.22</swagger-v2.version>
-        <hutool.version>5.8.20</hutool.version>
+        <hutool.version>5.8.25</hutool.version>
         <!--单独定义是防止依赖包的project.version冲突-->
         <treasure-bag.version>2.0-SNAPSHOT</treasure-bag.version>
         <jetcache.version>2.7.3</jetcache.version>
