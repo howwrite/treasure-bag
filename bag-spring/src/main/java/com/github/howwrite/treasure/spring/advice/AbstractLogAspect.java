@@ -1,6 +1,7 @@
 package com.github.howwrite.treasure.spring.advice;
 
 import com.alibaba.fastjson.JSONObject;
+import com.github.howwrite.treasure.core.BizLog;
 import com.github.howwrite.treasure.core.CheckSelf;
 import com.github.howwrite.treasure.core.Response;
 import com.github.howwrite.treasure.core.ServerBizException;
@@ -34,6 +35,12 @@ public abstract class AbstractLogAspect {
     public abstract void pointcut();
 
     /**
+     * 执行完回调
+     */
+    public void doFinally() {
+    }
+
+    /**
      * 是否需要输出请求成功的接口日志
      *
      * @return true: 默认打印请求成功的接口日志
@@ -64,6 +71,7 @@ public abstract class AbstractLogAspect {
         StopWatch watch = new StopWatch();
         watch.start();
         Object[] args = joinPoint.getArgs();
+        BizLog.start();
         try {
             if (args != null) {
                 for (Object arg : args) {
@@ -89,6 +97,9 @@ public abstract class AbstractLogAspect {
             getLogger().error(referenceLog(joinPoint, args, watch), e);
             final String message = messageSource.getMessage("系统开小差啦", null, "系统开小差啦", getLocale());
             return Response.fail(message, "系统开小差啦");
+        } finally {
+            BizLog.end();
+            doFinally();
         }
     }
 
