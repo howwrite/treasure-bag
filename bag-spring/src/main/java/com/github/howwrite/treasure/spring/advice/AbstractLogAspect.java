@@ -24,14 +24,14 @@ import java.util.Locale;
  */
 @Slf4j
 @RequiredArgsConstructor
-public abstract class AbstractAdapterAspect {
+public abstract class AbstractLogAspect {
     private final MessageSource messageSource;
 
     /**
      * aop切点
      * 例如: @Pointcut(value = "execution(public * com.github.howwrite.server.api.facade..*(..))")
      */
-    public abstract void apiPointcut();
+    public abstract void pointcut();
 
     /**
      * 是否需要输出请求成功的接口日志
@@ -59,7 +59,7 @@ public abstract class AbstractAdapterAspect {
         return "\n";
     }
 
-    @Around(value = "apiPointcut()")
+    @Around(value = "pointcut()")
     protected Object doApi(ProceedingJoinPoint joinPoint) {
         StopWatch watch = new StopWatch();
         watch.start();
