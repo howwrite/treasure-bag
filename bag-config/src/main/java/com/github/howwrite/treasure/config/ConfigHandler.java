@@ -1,6 +1,5 @@
 package com.github.howwrite.treasure.config;
 
-import com.github.howwrite.treasure.config.reader.FileConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -26,7 +25,7 @@ public class ConfigHandler {
                         field.setAccessible(true);
                         Config<?> currentValue = (Config<?>) field.get(null);
                         if (currentValue == null) {
-                            currentValue = new FileConfig<>();
+                            currentValue = ConfigHelper.newConfigInstance();
                         }
                         currentValue.prefix(prefix);
 
