@@ -29,8 +29,7 @@
     <modules>
         <module>bag-core</module>
         <module>bag-spring</module>
-        <module>jinxiu-road</module>
-        <module>jinxiu-spring</module>
+        <module>bag-config</module>
     </modules>
     <dependencies>
         <dependency>

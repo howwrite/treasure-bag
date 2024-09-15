@@ -17,12 +17,14 @@ public class BizLog {
     public static void end() {
         Map<String, Object> logMap = logMaps.get();
         if (logMap == null) return;
-        String logText = logMap.entrySet().stream().map(it -> it.getKey() + "=" + it.getValue()).collect(Collectors.joining("|"));
-        log.info(logText);
+        if (!logMap.isEmpty()) {
+            String logText = logMap.entrySet().stream().map(it -> it.getKey() + "=" + it.getValue()).collect(Collectors.joining("|"));
+            log.info(logText);
+        }
         logMaps.remove();
     }
 
-    public void log(String key, Object value) {
+    public static void log(String key, Object value) {
         if (logMaps.get() == null) {
             start();
         }
