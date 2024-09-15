@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 
 public class ConfigHelper {
     public static <T> Config<T> newConfigInstance() {
-        return new FileConfig<>();
+        return newConfigInstance(null);
     }
 
     public static <T> Config<T> newConfigInstance(Supplier<T> defaultSupplier) {
