@@ -1,14 +1,19 @@
-package com.github.howwrite.treasure.config;
+package com.github.howwrite.treasure.config.reader;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class FileConfig extends AbstractConfig {
+public class FileConfig<T> extends AbstractConfig<T> {
     @Override
-    public <T> T calValue(String key, Class<T> clazz) {
+    public String readConfig(String prefix, String key) {
         String configFolderPath = "config/";
+        if (StringUtils.isNotBlank(prefix)) {
+            configFolderPath += prefix + "/";
+        }
         String filePath = configFolderPath + key;
 
         // 检查文件是否存在
@@ -26,6 +31,6 @@ public class FileConfig extends AbstractConfig {
             return null;
         }
 
-        return convertValue(contentBuilder.toString(), clazz);
+        return contentBuilder.toString();
     }
 }

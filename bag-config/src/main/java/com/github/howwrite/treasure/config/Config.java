@@ -1,5 +1,16 @@
 package com.github.howwrite.treasure.config;
 
-public interface Config {
-    <T> T calValue(String key, Class<T> clazz, T defaultValue);
+import java.lang.reflect.Type;
+import java.util.function.Supplier;
+
+public interface Config<T> {
+    T calValue();
+
+    Config<T> type(Type type);
+
+    Config<T> prefix(String prefix);
+
+    Config<T> key(String key);
+
+    Config<T> defaultValue(Supplier<T> defaultSupplier);
 }
