@@ -14,7 +14,7 @@ public class FileConfig<T> extends AbstractConfig<T> {
         if (StringUtils.isNotBlank(prefix)) {
             configFolderPath += prefix + "/";
         }
-        String filePath = configFolderPath + key;
+        String filePath = configFolderPath + key + ".conf";
 
         // 检查文件是否存在
         if (!Files.exists(Paths.get(filePath))) {
