@@ -14,10 +14,10 @@ public class FileConfig<T> extends AbstractConfig<T> {
         if (StringUtils.isNotBlank(prefix)) {
             configFolderPath += prefix + "/";
         }
-        String filePath = configFolderPath + key + ".conf";
+        String filePath = judgeConfigPath(configFolderPath + key);
 
         // 检查文件是否存在
-        if (!Files.exists(Paths.get(filePath))) {
+        if (filePath == null) {
             return null;
         }
 
@@ -32,5 +32,17 @@ public class FileConfig<T> extends AbstractConfig<T> {
         }
 
         return contentBuilder.toString();
+    }
+
+    private String judgeConfigPath(String pathName) {
+        String jsonName = pathName + ".json";
+        if (Files.exists(Paths.get(jsonName))) {
+            return jsonName;
+        }
+        String confName = pathName + ".conf";
+        if (Files.exists(Paths.get(confName))) {
+            return confName;
+        }
+        return null;
     }
 }
