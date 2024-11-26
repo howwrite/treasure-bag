@@ -25,7 +25,7 @@ public class FileConfig<T> extends AbstractConfig<T> {
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String currentLine;
             while ((currentLine = br.readLine()) != null) {
-                contentBuilder.append(currentLine.trim());
+                contentBuilder.append(currentLine).append('\n');
             }
         } catch (Exception e) {
             return null;
