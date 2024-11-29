@@ -1,4 +1,6 @@
 package com.github.howwrite.treasure.core;
 
-public abstract class AbstractQuery {
+import java.io.Serializable;
+
+public abstract class AbstractQuery implements Serializable {
 }
