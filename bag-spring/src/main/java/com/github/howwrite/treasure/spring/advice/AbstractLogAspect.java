@@ -1,6 +1,6 @@
 package com.github.howwrite.treasure.spring.advice;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.github.howwrite.treasure.core.BizLog;
 import com.github.howwrite.treasure.core.CheckSelf;
 import com.github.howwrite.treasure.core.Response;
