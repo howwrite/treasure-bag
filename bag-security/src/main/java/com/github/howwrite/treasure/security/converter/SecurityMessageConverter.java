@@ -7,6 +7,7 @@ import com.github.howwrite.treasure.security.config.SecuritySwitch;
 import com.github.howwrite.treasure.security.helper.DecryptionHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpInputMessage;
+import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.Nullable;
 
@@ -17,6 +18,10 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 
 public class SecurityMessageConverter extends FastJsonHttpMessageConverter {
+    @Override
+    public boolean canWrite(Type type, Class<?> clazz, MediaType mediaType) {
+        return false;
+    }
 
     @Override
     public Object read(Type type, @Nullable Class<?> contextClass, HttpInputMessage inputMessage) throws HttpMessageNotReadableException {
