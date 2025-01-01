@@ -44,7 +44,7 @@ public class DecryptionHelper {
 
     private static Cipher getCipher(Map<String, String> keyMap) {
         List<String> keySortesList = keyMap.keySet().stream().sorted(Comparator.comparingInt(DecryptionHelper::sumAsciiValues)).toList();
-        return getCipher(keyMap.get(keySortesList.get(1)), keyMap.get(keySortesList.get(keySortesList.size() - 2)));
+        return getCipher(keyMap.get(keySortesList.get(1)) + 'D', keyMap.get(keySortesList.get(keySortesList.size() - 2)) + 'R');
     }
 
 
