@@ -8,6 +8,8 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -32,8 +34,17 @@ public class DecryptionHelper {
         return cipher;
     }
 
+    private static int sumAsciiValues(String str) {
+        int sum = 0;
+        for (char c : str.toCharArray()) {
+            sum += c;
+        }
+        return sum;
+    }
+
     private static Cipher getCipher(Map<String, String> keyMap) {
-        return getCipher(keyMap.get("key"), keyMap.get("iv"));
+        List<String> keySortesList = keyMap.keySet().stream().sorted(Comparator.comparingInt(DecryptionHelper::sumAsciiValues)).toList();
+        return getCipher(keyMap.get(keySortesList.get(1)), keyMap.get(keySortesList.get(keySortesList.size() - 2)));
     }
 
 
