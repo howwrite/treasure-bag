@@ -4,6 +4,7 @@ import com.github.howwrite.treasure.security.config.SecurityKeyConfig;
 import com.github.howwrite.treasure.security.config.SecuritySwitch;
 import org.apache.commons.codec.binary.Base64;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -51,8 +52,15 @@ public class DecryptionHelper {
     public static String decrypt(String encryptedData) throws Exception {
         // 获取密钥
         SecurityKeyConfig securityKeyConfig = SecuritySwitch.aesKeyConfig.calValue();
-        Cipher cipher = getCipher(securityKeyConfig.getNow());
+        try {
+            return decrypt(encryptedData, securityKeyConfig.getNow());
+        } catch (BadPaddingException e) {
+            return decrypt(encryptedData, securityKeyConfig.getDeprecated());
+        }
+    }
 
+    private static String decrypt(String encryptedData, Map<String, String> keyMap) throws Exception {
+        Cipher cipher = getCipher(keyMap);
         byte[] encryptedBytes = Base64.decodeBase64(encryptedData);
         byte[] original = cipher.doFinal(encryptedBytes);
         return new String(original);
