@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.howwrite.treasure.config.fetcher.ConfigFetcherProvider;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nullable;
@@ -12,6 +13,7 @@ import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+@Slf4j
 public class DefaultConfig<T> implements Config<T> {
     protected static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     @Nullable
@@ -30,6 +32,7 @@ public class DefaultConfig<T> implements Config<T> {
             String configStr = ConfigFetcherProvider.provideConfigFetcher(namespace, key).readConfig(namespace, key);
             return Optional.ofNullable(convertValue(configStr, type)).orElseGet(this::defaultValue);
         } catch (Exception e) {
+            log.error("call value failed, namespace:{}, key:{}", namespace, key, e);
             return defaultValue();
         }
     }
@@ -95,6 +98,7 @@ public class DefaultConfig<T> implements Config<T> {
             JavaType javaType = OBJECT_MAPPER.getTypeFactory().constructType(type);
             return OBJECT_MAPPER.readValue(content, javaType);
         } catch (JsonProcessingException e) {
+            log.error("config convert value failed, namespace:{}, key:{}, content:{}, type:{}", namespace, key, content, type, e);
             return null;
         }
     }
