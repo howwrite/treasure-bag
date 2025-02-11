@@ -1,32 +1,33 @@
-package com.github.howwrite.treasure.config.reader;
+package com.github.howwrite.treasure.config;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.howwrite.treasure.config.Config;
+import com.github.howwrite.treasure.config.fetcher.ConfigFetcherProvider;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public abstract class AbstractConfig<T> implements Config<T> {
+public class DefaultConfig<T> implements Config<T> {
     protected static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-
+    @Nullable
+    protected final Supplier<T> defaultSupplier;
     protected String namespace;
     protected String key;
-
     protected Type type;
 
-    protected Supplier<T> defaultSupplier;
-
-    protected abstract String readConfig(String namespace, String key);
+    public DefaultConfig(@Nullable Supplier<T> defaultSupplier) {
+        this.defaultSupplier = defaultSupplier;
+    }
 
     @Override
     public T calValue() {
         try {
-            String configStr = readConfig(namespace, key);
+            String configStr = ConfigFetcherProvider.provideConfigFetcher(namespace, key).readConfig(namespace, key);
             return Optional.ofNullable(convertValue(configStr, type)).orElseGet(this::defaultValue);
         } catch (Exception e) {
             return defaultValue();
@@ -34,10 +35,7 @@ public abstract class AbstractConfig<T> implements Config<T> {
     }
 
     protected T defaultValue() {
-        if (defaultSupplier == null) {
-            return null;
-        }
-        return defaultSupplier.get();
+        return Optional.ofNullable(defaultSupplier).map(Supplier::get).orElse(null);
     }
 
 
@@ -56,12 +54,6 @@ public abstract class AbstractConfig<T> implements Config<T> {
     @Override
     public Config<T> namespace(String namespace) {
         this.namespace = namespace;
-        return this;
-    }
-
-    @Override
-    public Config<T> defaultValue(Supplier<T> defaultSupplier) {
-        this.defaultSupplier = defaultSupplier;
         return this;
     }
 

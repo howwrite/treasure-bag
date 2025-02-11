@@ -1,4 +1,4 @@
-package com.github.howwrite.treasure.config.reader;
+package com.github.howwrite.treasure.config.fetcher;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -7,7 +7,8 @@ import java.io.FileReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class FileConfig<T> extends AbstractConfig<T> {
+public class FileFetcher implements ConfigFetcher {
+
     @Override
     public String readConfig(String namespace, String key) {
         String configFolderPath = "config/";
