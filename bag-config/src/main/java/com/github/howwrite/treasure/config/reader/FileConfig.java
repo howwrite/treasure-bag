@@ -9,10 +9,10 @@ import java.nio.file.Paths;
 
 public class FileConfig<T> extends AbstractConfig<T> {
     @Override
-    public String readConfig(String prefix, String key) {
+    public String readConfig(String namespace, String key) {
         String configFolderPath = "config/";
-        if (StringUtils.isNotBlank(prefix)) {
-            configFolderPath += prefix + "/";
+        if (StringUtils.isNotBlank(namespace)) {
+            configFolderPath += namespace + "/";
         }
         String filePath = judgeConfigPath(configFolderPath + key);
 

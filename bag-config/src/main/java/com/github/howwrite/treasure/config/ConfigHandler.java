@@ -13,7 +13,7 @@ public class ConfigHandler {
     public static void handler(Class<?> clazz) {
         Field[] fields = clazz.getDeclaredFields();
         ConfigNamespace nameSpace = clazz.getAnnotation(ConfigNamespace.class);
-        String prefix = Optional.ofNullable(nameSpace).map(ConfigNamespace::prefix).orElse(null);
+        String namespace = Optional.ofNullable(nameSpace).map(ConfigNamespace::namespace).orElse(clazz.getSimpleName());
 
         for (Field field : fields) {
             // 检查字段是否被@MyAnnotation注解标记
@@ -27,7 +27,7 @@ public class ConfigHandler {
                         if (currentValue == null) {
                             currentValue = ConfigHelper.newConfigInstance();
                         }
-                        currentValue.prefix(prefix);
+                        currentValue.namespace(namespace);
 
                         ConfigGenerator annotation = field.getAnnotation(ConfigGenerator.class);
                         String key = StringUtils.isBlank(annotation.key()) ? field.getName() : annotation.key();

@@ -8,7 +8,7 @@ public interface Config<T> {
 
     Config<T> type(Type type);
 
-    Config<T> prefix(String prefix);
+    Config<T> namespace(String namespace);
 
     Config<T> key(String key);
 

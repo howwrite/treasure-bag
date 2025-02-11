@@ -14,19 +14,19 @@ import java.util.function.Supplier;
 public abstract class AbstractConfig<T> implements Config<T> {
     protected static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    protected String prefix;
+    protected String namespace;
     protected String key;
 
     protected Type type;
 
     protected Supplier<T> defaultSupplier;
 
-    protected abstract String readConfig(String prefix, String key);
+    protected abstract String readConfig(String namespace, String key);
 
     @Override
     public T calValue() {
         try {
-            String configStr = readConfig(prefix, key);
+            String configStr = readConfig(namespace, key);
             return Optional.ofNullable(convertValue(configStr, type)).orElseGet(this::defaultValue);
         } catch (Exception e) {
             return defaultValue();
@@ -54,8 +54,8 @@ public abstract class AbstractConfig<T> implements Config<T> {
     }
 
     @Override
-    public Config<T> prefix(String prefix) {
-        this.prefix = prefix;
+    public Config<T> namespace(String namespace) {
+        this.namespace = namespace;
         return this;
     }
 
