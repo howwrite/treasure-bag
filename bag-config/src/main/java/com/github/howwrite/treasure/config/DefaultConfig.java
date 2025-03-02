@@ -1,6 +1,7 @@
 package com.github.howwrite.treasure.config;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.howwrite.treasure.config.fetcher.ConfigFetcherProvider;
@@ -16,6 +17,11 @@ import java.util.function.Supplier;
 @Slf4j
 public class DefaultConfig<T> implements Config<T> {
     protected static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
+    static {
+        OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    }
+
     @Nullable
     protected final Supplier<T> defaultSupplier;
     protected String namespace;
