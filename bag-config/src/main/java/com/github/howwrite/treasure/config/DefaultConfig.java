@@ -1,9 +1,6 @@
 package com.github.howwrite.treasure.config;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.alibaba.fastjson2.JSONObject;
 import com.github.howwrite.treasure.config.fetcher.ConfigFetcherProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -16,12 +13,6 @@ import java.util.function.Supplier;
 
 @Slf4j
 public class DefaultConfig<T> implements Config<T> {
-    protected static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-
-    static {
-        OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    }
-
     @Nullable
     protected final Supplier<T> defaultSupplier;
     protected String namespace;
@@ -100,12 +91,6 @@ public class DefaultConfig<T> implements Config<T> {
         if (BigDecimal.class.equals(type)) {
             return (T) new BigDecimal(content);
         }
-        try {
-            JavaType javaType = OBJECT_MAPPER.getTypeFactory().constructType(type);
-            return OBJECT_MAPPER.readValue(content, javaType);
-        } catch (JsonProcessingException e) {
-            log.error("config convert value failed, namespace:{}, key:{}, content:{}, type:{}", namespace, key, content, type, e);
-            return null;
-        }
+        return JSONObject.parseObject(content, type);
     }
 }
