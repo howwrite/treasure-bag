@@ -2,10 +2,6 @@ package com.github.howwrite.treasure.core;
 
 public interface PageQuery {
 
-    Integer DEFAULT_PAGE_NO = 1;
-    Integer DEFAULT_PAGE_SIZE = 10;
-
-
     default Integer getOffset() {
         Integer no = getPageNo();
         Integer size = getPageSize();

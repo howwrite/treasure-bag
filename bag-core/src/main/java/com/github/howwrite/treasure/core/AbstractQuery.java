@@ -1,8 +1,11 @@
 package com.github.howwrite.treasure.core;
 
+import lombok.Data;
+
 import java.io.Serializable;
 
-public abstract class AbstractQuery implements Serializable {
-    private Integer offset;
-    private Integer limit;
+@Data
+public abstract class AbstractQuery implements Serializable, PageQuery {
+    private Integer pageNo;
+    private Integer pageSize;
 }
