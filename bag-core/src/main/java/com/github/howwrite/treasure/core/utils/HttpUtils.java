@@ -1,29 +1,27 @@
 package com.github.howwrite.treasure.core.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
+import okhttp3.*;
+import okhttp3.Request.Builder;
+import org.apache.commons.collections4.MapUtils;
+
+import javax.annotation.Nullable;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nullable;
-
-import org.apache.commons.collections4.MapUtils;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import lombok.extern.slf4j.Slf4j;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Request.Builder;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-
 @Slf4j
 public class HttpUtils {
-    private static final OkHttpClient client = new OkHttpClient();
+    private static final OkHttpClient client = new OkHttpClient.Builder()
+            .connectTimeout(1, TimeUnit.HOURS) // 连接超时时间
+            .readTimeout(1, TimeUnit.HOURS)    // 读取超时时间
+            .writeTimeout(1, TimeUnit.HOURS)   // 写入超时时间
+            .build();
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
