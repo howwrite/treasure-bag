@@ -2,6 +2,7 @@ package com.github.howwrite.treasure.core;
 
 import lombok.Data;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,7 +24,26 @@ public class Pagination<T> implements Serializable {
         }
     }
 
+    public Pagination(List<T> data, @Nonnull PageQuery pageQuery) {
+        this.data = paginateList(data, pageQuery.getPageNo(), pageQuery.getPageSize());
+        this.total = data.size();
+        this.pageNo = pageQuery.getPageNo();
+        this.pageSize = pageQuery.getPageSize();
+    }
+
     public static <T> Pagination<T> empty() {
         return new Pagination<>(new ArrayList<>(), 0, null);
+    }
+
+    public static <T> List<T> paginateList(List<T> list, int pageNo, int pageSize) {
+        if (list == null || list.isEmpty()) {
+            return new ArrayList<>();
+        }
+        int startIndex = (pageNo - 1) * pageSize;
+        if (startIndex >= list.size()) {
+            return new ArrayList<>();
+        }
+        int endIndex = Math.min(startIndex + pageSize, list.size());
+        return list.subList(startIndex, endIndex);
     }
 }
