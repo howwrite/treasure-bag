@@ -25,8 +25,8 @@ public class Pagination<T> implements Serializable {
     }
 
     public Pagination(List<T> data, @Nonnull PageQuery pageQuery) {
-        this.data = paginateList(data, pageQuery.getPageNo(), pageQuery.getPageSize());
         this.total = data.size();
+        this.data = paginateList(data, pageQuery.getPageNo(), pageQuery.getPageSize());
         this.pageNo = pageQuery.getPageNo();
         this.pageSize = pageQuery.getPageSize();
     }
