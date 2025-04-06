@@ -18,9 +18,9 @@ import java.util.stream.Collectors;
 @Slf4j
 public class HttpUtils {
     private static final OkHttpClient client = new OkHttpClient.Builder()
-            .connectTimeout(1, TimeUnit.HOURS) // 连接超时时间
-            .readTimeout(1, TimeUnit.HOURS)    // 读取超时时间
-            .writeTimeout(1, TimeUnit.HOURS)   // 写入超时时间
+            .connectTimeout(6, TimeUnit.HOURS) // 连接超时时间
+            .readTimeout(6, TimeUnit.HOURS)    // 读取超时时间
+            .writeTimeout(6, TimeUnit.HOURS)   // 写入超时时间
             .build();
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
