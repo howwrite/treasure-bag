@@ -37,9 +37,11 @@ public class SecurityMessageConverter extends FastJsonHttpMessageConverter {
         try (InputStream in = inputMessage.getBody()) {
             byte[] buffer = in.readAllBytes();
             String requestBody = new String(buffer);
-            validTimestamp(inputMessage, requestBody);
             String afterDecode = URLDecoder.decode(requestBody, StandardCharsets.UTF_8);
-            return JSON.parseObject(DecryptionHelper.decrypt(afterDecode), type, getFastJsonConfig().getDateFormat(),
+            String afterDecrypt = DecryptionHelper.decrypt(afterDecode);
+            String[] split = StringUtils.split(afterDecrypt, "|", 2);
+            validTimestamp(inputMessage, split[0], split[1]);
+            return JSON.parseObject(split[1], type, getFastJsonConfig().getDateFormat(),
                     getFastJsonConfig().getReaderFilters(), getFastJsonConfig().getReaderFeatures());
         } catch (JSONException ex) {
             throw new HttpMessageNotReadableException("JSON parse error: " + ex.getMessage(), ex, inputMessage);
@@ -52,8 +54,7 @@ public class SecurityMessageConverter extends FastJsonHttpMessageConverter {
         }
     }
 
-    private void validTimestamp(HttpInputMessage inputMessage, String requestBody) {
-        String timestamp = inputMessage.getHeaders().getFirst("timestamp");
+    private void validTimestamp(HttpInputMessage inputMessage, String timestamp, String requestBody) {
         if (StringUtils.isBlank(timestamp) || !StringUtils.isNumeric(timestamp)) {
             throw new HttpMessageNotReadableException("请检查系统时间", inputMessage);
         }
