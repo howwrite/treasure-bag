@@ -66,7 +66,7 @@ public class SecurityMessageConverter extends FastJsonHttpMessageConverter {
         int signatureResult = 501;
         for (int i = 0; i < requestBody.length(); i++) {
             char c = requestBody.charAt(i);
-            if (c == '=') {
+            if (c == '=' || c == ' ' || c == '\n' || c == '\r' || c == '\t') {
                 continue;
             }
             signatureResult += c;
