@@ -66,10 +66,9 @@ public class SecurityMessageConverter extends FastJsonHttpMessageConverter {
         int signatureResult = 501;
         for (int i = 0; i < requestBody.length(); i++) {
             char c = requestBody.charAt(i);
-            if (c == '=' || c == ' ' || c == '\n' || c == '\r' || c == '\t') {
-                continue;
+            if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9')) {
+                signatureResult += c;
             }
-            signatureResult += c;
         }
         if (signatureResult % 10 != timestampLong % 10) {
             throw new HttpMessageNotReadableException("请校准系统时间！", inputMessage);
