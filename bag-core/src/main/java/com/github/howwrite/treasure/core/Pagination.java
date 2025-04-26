@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Data
 public class Pagination<T> implements Serializable {
@@ -15,20 +16,21 @@ public class Pagination<T> implements Serializable {
     private Integer pageNo;
     private Integer pageSize;
 
-    public Pagination(List<T> data, Integer total, @Nullable PageQuery pageQuery) {
+
+    public Pagination(List<T> data, Integer total, Integer pageNo, Integer pageSize) {
         this.data = data;
         this.total = total;
-        if (pageQuery != null) {
-            this.pageNo = pageQuery.getPageNo();
-            this.pageSize = pageQuery.getPageSize();
-        }
+        this.pageNo = pageNo;
+        this.pageSize = pageSize;
+    }
+
+    public Pagination(List<T> data, Integer total, @Nullable PageQuery pageQuery) {
+        this(data, total, Optional.ofNullable(pageQuery).map(PageQuery::getPageNo).orElse(null),
+                Optional.ofNullable(pageQuery).map(PageQuery::getPageSize).orElse(null));
     }
 
     public Pagination(List<T> data, @Nonnull PageQuery pageQuery) {
-        this.total = data.size();
-        this.data = paginateList(data, pageQuery.getPageNo(), pageQuery.getPageSize());
-        this.pageNo = pageQuery.getPageNo();
-        this.pageSize = pageQuery.getPageSize();
+        this(data, null, pageQuery);
     }
 
     public static <T> Pagination<T> empty() {
