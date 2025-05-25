@@ -1,7 +1,7 @@
 package com.github.howwrite.treasure.config;
 
 import com.alibaba.fastjson2.JSONObject;
-import com.github.howwrite.treasure.config.fetcher.ConfigFetcherProvider;
+import com.github.howwrite.treasure.config.factory.ConfigFactoryProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -26,7 +26,7 @@ public class DefaultConfig<T> implements Config<T> {
     @Override
     public T calValue() {
         try {
-            String configStr = ConfigFetcherProvider.provideConfigFetcher(namespace, key).readConfig(namespace, key);
+            String configStr = ConfigFactoryProvider.readConfig(namespace, key);
             return Optional.ofNullable(convertValue(configStr, type)).orElseGet(this::defaultValue);
         } catch (Exception e) {
             log.error("call value failed, namespace:{}, key:{}", namespace, key, e);
