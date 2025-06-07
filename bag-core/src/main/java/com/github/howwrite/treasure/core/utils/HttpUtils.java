@@ -102,4 +102,38 @@ public class HttpUtils {
             }
         });
     }
+
+    /**
+     * 获取url中的文件扩展名
+     * http://example.com/path/to/file.jpg?param=value -> jpg
+     */
+    public static String calFileExtension(String url) {
+        if (url == null || url.isEmpty()) {
+            return null;
+        }
+
+        // 处理#后面的内容
+        int hashIndex = url.indexOf('#');
+        if (hashIndex != -1) {
+            url = url.substring(0, hashIndex);
+        }
+
+        // 处理?后面的内容
+        int queryIndex = url.indexOf('?');
+        if (queryIndex != -1) {
+            url = url.substring(0, queryIndex);
+        }
+
+        // 获取最后一个路径段
+        int lastSlashIndex = url.lastIndexOf('/');
+        String fileName = lastSlashIndex != -1 ? url.substring(lastSlashIndex + 1) : url;
+
+        // 查找最后一个点的位置
+        int dotIndex = fileName.lastIndexOf('.');
+        if (dotIndex == -1 || dotIndex == 0) {
+            return null;
+        }
+
+        return fileName.substring(dotIndex + 1);
+    }
 }
