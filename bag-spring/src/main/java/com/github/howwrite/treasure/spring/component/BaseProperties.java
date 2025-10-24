@@ -15,6 +15,6 @@ public abstract class BaseProperties {
 
     @PostConstruct
     public void showMe() {
-        log.info(this.getClass() + " properties body is:{}", ToStringBuilder.reflectionToString(this));
+        log.info("{} properties body is:{}", this.getClass(), ToStringBuilder.reflectionToString(this));
     }
 }
