@@ -1,62 +1,194 @@
 package com.github.howwrite.treasure.core.utils;
 
 import java.lang.reflect.*;
-import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 /**
- * @author howwrite
+ * 反射工具集合, 围绕泛型继承关系与类型解析提供便捷方法.
  */
-public class ClassUtils {
+public final class ClassUtils {
+
+    private ClassUtils() {
+    }
+
+    /**
+     * 判断 subclass 是否继承或实现了带泛型的 superclass, 并校验泛型参数与父类声明的上界是否兼容。
+     */
     public static boolean isSubclassOfGenerics(Class<?> subclass, Class<?> superclass) {
-        // 检查是否是直接的继承关系
-        if (superclass.isAssignableFrom(subclass)) {
-            // 获取实际的类型参数
-            Type superClassType = superclass.getGenericSuperclass();
-            Type subClassType = subclass.getGenericSuperclass();
+        if (subclass == null || superclass == null) {
+            return false;
+        }
+        if (!superclass.isAssignableFrom(subclass)) {
+            return false;
+        }
 
-            // 如果父类或子类不是参数化的类型，则直接返回true
-            if (!(superClassType instanceof ParameterizedType superType) || !(subClassType instanceof ParameterizedType subType)) {
-                return true;
-            }
+        TypeVariable<? extends Class<?>>[] typeParameters = superclass.getTypeParameters();
+        if (typeParameters.length == 0) {
+            // 父类不声明泛型，原始继承关系即可
+            return true;
+        }
 
-            // 转换为参数化类型以比较类型参数
+        ParameterizedType parameterizedType = resolveParameterizedType(subclass, superclass);
+        if (parameterizedType == null) {
+            return false;
+        }
 
-            // 获取并比较类型参数
-            Type[] superTypeArgs = superType.getActualTypeArguments();
-            Type[] subTypeArgs = subType.getActualTypeArguments();
+        Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
+        if (actualTypeArguments.length != typeParameters.length) {
+            return false;
+        }
 
-            // 如果泛型参数数量不匹配，则不是正确的子类
-            if (superTypeArgs.length != subTypeArgs.length) {
+        for (int i = 0; i < typeParameters.length; i++) {
+            if (!isTypeCompatible(typeParameters[i], actualTypeArguments[i])) {
                 return false;
             }
+        }
+        return true;
+    }
 
-            // 比较每个泛型参数
-            for (int i = 0; i < superTypeArgs.length; i++) {
-                if (!typeEquals(superTypeArgs[i], subTypeArgs[i])) {
-                    // 如果泛型参数不匹配，则不是正确的子类
+    /**
+     * 获取 sourceClass 在继承或实现 targetClass 时的第 index 个泛型参数, 解析失败返回 Object。
+     */
+    public static Class<?> resolveGenericTypeArgument(Class<?> sourceClass, Class<?> targetClass, int index) {
+        ParameterizedType parameterizedType = resolveParameterizedType(sourceClass, targetClass);
+        if (parameterizedType == null) {
+            return Object.class;
+        }
+        Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
+        if (index < 0 || index >= actualTypeArguments.length) {
+            throw new IllegalArgumentException("index 超出泛型参数数量");
+        }
+        return toClass(actualTypeArguments[index]);
+    }
+
+    /**
+     * 获取 sourceClass 对 targetClass 的首个泛型参数。
+     */
+    public static Class<?> resolveGenericTypeArgument(Class<?> sourceClass, Class<?> targetClass) {
+        return resolveGenericTypeArgument(sourceClass, targetClass, 0);
+    }
+
+    /**
+     * 定位 sourceClass 在继承关系链上与 targetClass 对应的参数化类型。
+     */
+    public static ParameterizedType resolveParameterizedType(Class<?> sourceClass, Class<?> targetClass) {
+        if (sourceClass == null || targetClass == null) {
+            return null;
+        }
+        if (!targetClass.isAssignableFrom(sourceClass)) {
+            return null;
+        }
+        return searchParameterizedType(sourceClass, targetClass, new HashSet<>());
+    }
+
+    private static ParameterizedType searchParameterizedType(Class<?> currentClass, Class<?> targetClass, Set<Type> visited) {
+        if (currentClass == null || currentClass == Object.class) {
+            return null;
+        }
+
+        Type genericSuperclass = currentClass.getGenericSuperclass();
+        ParameterizedType match = matchType(genericSuperclass, targetClass, visited);
+        if (match != null) {
+            return match;
+        }
+
+        for (Type genericInterface : currentClass.getGenericInterfaces()) {
+            match = matchType(genericInterface, targetClass, visited);
+            if (match != null) {
+                return match;
+            }
+        }
+        return searchParameterizedType(currentClass.getSuperclass(), targetClass, visited);
+    }
+
+    private static ParameterizedType matchType(Type type, Class<?> targetClass, Set<Type> visited) {
+        if (type == null || !visited.add(type)) {
+            return null;
+        }
+        if (type instanceof ParameterizedType parameterizedType) {
+            Type rawType = parameterizedType.getRawType();
+            if (rawType instanceof Class<?> rawClass) {
+                if (Objects.equals(rawClass, targetClass)) {
+                    return parameterizedType;
+                }
+                if (targetClass.isAssignableFrom(rawClass)) {
+                    return searchParameterizedType(rawClass, targetClass, visited);
+                }
+            }
+        } else if (type instanceof Class<?> rawClass) {
+            if (Objects.equals(rawClass, targetClass)) {
+                return null;
+            }
+            if (targetClass.isAssignableFrom(rawClass)) {
+                return searchParameterizedType(rawClass, targetClass, visited);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 判断实际类型是否满足父类类型变量的约束。
+     */
+    private static boolean isTypeCompatible(Type expected, Type actual) {
+        if (expected instanceof TypeVariable<?> typeVariable) {
+            for (Type bound : typeVariable.getBounds()) {
+                if (!isTypeCompatible(bound, actual)) {
                     return false;
                 }
             }
-            // 所有泛型参数都匹配，是正确的子类
             return true;
         }
-        return false;
+        if (expected instanceof WildcardType wildcardType) {
+            for (Type upperBound : wildcardType.getUpperBounds()) {
+                if (!isTypeCompatible(upperBound, actual)) {
+                    return false;
+                }
+            }
+            for (Type lowerBound : wildcardType.getLowerBounds()) {
+                if (!isTypeCompatible(actual, lowerBound)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        Class<?> expectedClass = toClass(expected);
+        Class<?> actualClass = toClass(actual);
+        return expectedClass.isAssignableFrom(actualClass);
     }
 
-    private static boolean typeEquals(Type type1, Type type2) {
-        if (type1 instanceof Class && type2 instanceof Class) {
-            return ((Class<?>) type1).isAssignableFrom((Class<?>) type2);
-        } else if (type1 instanceof ParameterizedType pType1 && type2 instanceof ParameterizedType pType2) {
-            return typeEquals(pType1.getRawType(), pType2.getRawType()) &&
-                    Arrays.equals(pType1.getActualTypeArguments(), pType2.getActualTypeArguments());
-        } else if (type1 instanceof GenericArrayType gType1 && type2 instanceof GenericArrayType gType2) {
-            return typeEquals(gType1.getGenericComponentType(), gType2.getGenericComponentType());
-        } else if (type1 instanceof TypeVariable<?> tType1 && type2 instanceof TypeVariable<?> tType2) {
-            return tType1.equals(tType2);
-        } else if (type1 instanceof WildcardType wType1 && type2 instanceof WildcardType wType2) {
-            return Arrays.equals(wType1.getUpperBounds(), wType2.getUpperBounds()) &&
-                    Arrays.equals(wType1.getLowerBounds(), wType2.getLowerBounds());
+    /**
+     * 将 Type 折算为 Class, 尽可能保留元素类型。
+     */
+    private static Class<?> toClass(Type type) {
+        if (type instanceof Class<?> clazz) {
+            return clazz;
         }
-        return false;
+        if (type instanceof ParameterizedType parameterizedType) {
+            Type rawType = parameterizedType.getRawType();
+            if (rawType instanceof Class<?> rawClass) {
+                return rawClass;
+            }
+        }
+        if (type instanceof GenericArrayType genericArrayType) {
+            Class<?> component = toClass(genericArrayType.getGenericComponentType());
+            return Array.newInstance(component, 0).getClass();
+        }
+        if (type instanceof TypeVariable<?> typeVariable) {
+            Type[] bounds = typeVariable.getBounds();
+            return bounds.length == 0 ? Object.class : toClass(bounds[0]);
+        }
+        if (type instanceof WildcardType wildcardType) {
+            Type[] upperBounds = wildcardType.getUpperBounds();
+            if (upperBounds.length > 0) {
+                return toClass(upperBounds[0]);
+            }
+            Type[] lowerBounds = wildcardType.getLowerBounds();
+            if (lowerBounds.length > 0) {
+                return toClass(lowerBounds[0]);
+            }
+        }
+        return Object.class;
     }
 }
