@@ -25,12 +25,14 @@
         <!--单独定义是防止依赖包的project.version冲突-->
         <treasure-bag.version>2.0-SNAPSHOT</treasure-bag.version>
         <jetcache.version>2.7.3</jetcache.version>
+        <mybatis-dr.version>1.0-SNAPSHOT</mybatis-dr.version>
     </properties>
     <modules>
         <module>bag-core</module>
         <module>bag-spring</module>
         <module>bag-config</module>
         <module>bag-security</module>
+        <module>bag-config-db</module>
     </modules>
     <dependencies>
         <dependency>
@@ -114,6 +116,16 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-collections4</artifactId>
                 <version>4.4</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.howwrite</groupId>
+                <artifactId>mybatis-dr-core</artifactId>
+                <version>${mybatis-dr.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.howwrite</groupId>
+                <artifactId>mybatis-dr-spring-boot-starter</artifactId>
+                <version>${mybatis-dr.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
