@@ -10,5 +10,5 @@ CREATE TABLE `config`
     `updated_time` datetime     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录修改时间',
     PRIMARY KEY (`id`),
     UNIQUE KEY `uni_user_id` (`key`,`namespace`,`deleted`)
-) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='配置信息表'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='配置信息表'
 
