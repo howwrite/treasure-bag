@@ -5,6 +5,7 @@ import com.alibaba.fastjson2.JSONException;
 import com.alibaba.fastjson2.support.spring6.http.converter.FastJsonHttpMessageConverter;
 import com.github.howwrite.treasure.security.config.SecuritySwitch;
 import com.github.howwrite.treasure.security.helper.DecryptionHelper;
+import com.github.howwrite.treasure.security.helper.SecurityIgnoreHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.MediaType;
@@ -36,13 +37,15 @@ public class SecurityMessageConverter extends FastJsonHttpMessageConverter {
     private Object readType(Type type, HttpInputMessage inputMessage) {
         try (InputStream in = inputMessage.getBody()) {
             byte[] buffer = in.readAllBytes();
-            String requestBody = new String(buffer);
+            String requestBody = new String(buffer, StandardCharsets.UTF_8);
+            if (SecurityIgnoreHelper.shouldIgnore(inputMessage)) {
+                return parseRequestBody(type, requestBody);
+            }
             String afterDecode = URLDecoder.decode(requestBody, StandardCharsets.UTF_8);
             String afterDecrypt = DecryptionHelper.decrypt(afterDecode);
             String[] split = StringUtils.split(afterDecrypt, "|", 2);
             validTimestamp(inputMessage, split[0], split[1]);
-            return JSON.parseObject(split[1], type, getFastJsonConfig().getDateFormat(),
-                    getFastJsonConfig().getReaderFilters(), getFastJsonConfig().getReaderFeatures());
+            return parseRequestBody(type, split[1]);
         } catch (JSONException ex) {
             throw new HttpMessageNotReadableException("JSON parse error: " + ex.getMessage(), ex, inputMessage);
         } catch (IOException ex) {
@@ -52,6 +55,11 @@ public class SecurityMessageConverter extends FastJsonHttpMessageConverter {
         } catch (Exception ex) {
             throw new HttpMessageNotReadableException("read param error while reading input message", ex, inputMessage);
         }
+    }
+
+    private Object parseRequestBody(Type type, String requestBody) {
+        return JSON.parseObject(requestBody, type, getFastJsonConfig().getDateFormat(),
+                getFastJsonConfig().getReaderFilters(), getFastJsonConfig().getReaderFeatures());
     }
 
     private void validTimestamp(HttpInputMessage inputMessage, String timestamp, String requestBody) {
